@@ -1,0 +1,74 @@
+$primary-hover-color: #3d4db5;
+
+.new-post {
+  // display: flex;
+  justify-content: center;
+
+  .title {
+    color: white;
+    font-size: 32px;
+    text-align: left;
+    padding-bottom: 20px;
+  }
+
+  .post-block {
+    .post-card {
+      color: white;
+      background-color: #131740;
+    }
+  }
+
+  p.content-title {
+    text-align: left;
+  }
+
+  .other-info {
+    .publish-switch {
+      background-color: #131740;
+
+      .publish-title {
+        text-align: left;
+        color: white;
+      }
+
+      .Comments-title {
+        text-align: left;
+        color: white;
+      }
+    }
+
+  }
+
+}
+
+.toast-setting {
+  border: 1px solid $primary-hover-color;
+  background: #3d4db5;
+  color: white;
+}
+
+.ql-toolbar .ql-format span {
+  color: white !important;
+
+  select {
+    color: white;
+  }
+
+  .ql-picker.ql-expanded {
+    background-color: #131740;
+  }
+}
+
+.ant-upload-wrapper .ant-upload-drag p.ant-upload-drag-icon .anticon  {
+  color: #ff06b7;
+}
+
+.ant-upload-wrapper .ant-upload-drag {
+  p.ant-upload-text {
+    color: white!important;
+  }
+  
+  .ant-upload-hint {
+    color: white!important;
+  }
+}

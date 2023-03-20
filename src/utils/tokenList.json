@@ -1,0 +1,86 @@
+[
+    {
+        "ticker": "ALGO",
+        "img": "https://algonrich.com/assets/images/logo1.png",
+        "name": "ALGONRICH",
+        "address": "0x2dA63e26978B27CA854bdFe33F9866AA7c99813D",
+        "decimals": 18
+    },
+    {
+        "ticker": "USDC",
+        "img": "https://mdex.co/token-icons/bsc/0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d.png",
+        "name": "USD Coin ",
+        "address": "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d",
+        "decimals": 18
+    },
+    {
+        "ticker": "WBNB",
+        "img": "https://mdex.co/token-icons/bsc/0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c.png",
+        "name": "WBNB",
+        "address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+        "decimals": 18
+    },
+    {
+        "ticker": "BUSD",
+        "img":"https://mdex.co/token-icons/bsc/0xe9e7cea3dedca5984780bafc599bd69add087d56.png",
+        "name": "BUSD",
+        "address": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
+        "decimals": 18
+    },
+    {
+        "ticker": "BTCB",
+        "img": "https://mdex.co/token-icons/bsc/0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c.png",
+        "name": "Binance-Peg BTCB Token",
+        "address": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+        "decimals": 18
+    },
+    {
+        "ticker": "DOT",
+        "img": "https://mdex.co/token-icons/bsc/0x7083609fce4d1d8dc0c979aab8c869ea2c873402.png",
+        "name": "Binance-Peg Polkadot Token",
+        "address": "0x7083609fce4d1d8dc0c979aab8c869ea2c873402",
+        "decimals": 18
+    },
+    {
+        "ticker": "USDT",
+        "img": "https://mdex.co/token-icons/bsc/0x55d398326f99059ff775485246999027b3197955.png",
+        "name": "Dai Stablecoin",
+        "address": "0x55d398326f99059fF775485246999027B3197955",
+        "decimals": 18
+    },
+    {
+        "ticker": "WETH",
+        "img": "https://mdex.co/token-icons/bsc/0x2170ed0880ac9a755fd29b2688956bd959f933f8.png",
+        "name": "Wrapped Ethereum",
+        "address": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+        "decimals": 18
+    },
+    {
+        "ticker": "ADA",
+        "img": "https://mdex.co/token-icons/bsc/0x3ee2200efb3400fabb9aacf31297cbdd1d435d47.png",
+        "name": "Binance-Peg Cardano Token",
+        "address": "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
+        "decimals": 18
+    },
+    {
+        "ticker": "LINK",
+        "img": "https://mdex.co/token-icons/bsc/0xf8a0bf9cf54bb92f17374d9e9a321e6a111a51bd.png",
+        "name": "Binance-Peg ChainLink Token",
+        "address": "0xf8a0bf9cf54bb92f17374d9e9a321e6a111a51bd",
+        "decimals": 18
+    },
+    {
+        "ticker": "DOGE",
+        "img": "https://mdex.co/token-icons/bsc/0xba2ae424d960c26247dd6c32edc70b295c744c43.png",
+        "name": "Binance-Peg Dogecoin",
+        "address": "0xba2ae424d960c26247dd6c32edc70b295c744c43",
+        "decimals": 18
+    },
+    {
+        "ticker": "1inch",
+        "img": "https://searchvectorlogo.com/wp-content/uploads/2021/11/1inch-network-logo-vector.png",
+        "name": "1inch Coin ",
+        "address": "0x111111111117dC0aa78b770fA6A738034120C302",
+        "decimals": 18
+    }
+]

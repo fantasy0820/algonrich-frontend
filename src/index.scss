@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0c1226;
+  box-sizing: border-box;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New','Nunito'
+    monospace;
+}
+
+.ql-snow .ql-stroke {
+  stroke: white !important;
+}
+
+.ql-picker-label {
+  color: white !important;
+}
+
+.ql-container {
+  height: 20vh !important;
+}
+.css-l3ln04-MuiAutocomplete-root .MuiAutocomplete-tag  {
+  background-color: white;
+}
+
+.MuiAutocomplete-endAdornment button{
+  color: white!important;
+}
