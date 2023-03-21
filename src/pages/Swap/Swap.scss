@@ -5,12 +5,12 @@ $primary-hover-color: #3d4db5;
   width: 40px;
 }
 
-:where(.css-dev-only-do-not-override-ph9edi).ant-modal .ant-modal-content {
-  background: #0C1226 !important;
+.ant-modal-content {
+  background: #0c1226 !important;
 }
 
-:where(.css-dev-only-do-not-override-ph9edi).ant-modal .ant-modal-title {
-  background: #0C1226 !important;
+.ant-modal-title {
+  background: #0c1226 !important;
   color: #fff !important;
 }
 
@@ -23,11 +23,11 @@ input::-webkit-inner-spin-button {
 .modalContent {
   border-top: 1px solid #dbe5ff;
   /* padding-top: 20px; */
-  background: #0C1226 !important;
+  background: #0c1226 !important;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px
+  gap: 10px;
 }
 
 .tokenChoice {
@@ -51,7 +51,6 @@ input::-webkit-inner-spin-button {
     font-weight: 300;
     color: #51596f;
   }
-
 }
 
 .tokenChoice:hover {
@@ -73,15 +72,11 @@ input::-webkit-inner-spin-button {
   }
 }
 
-
-
-
 .assetLogo {
   width: 22px;
   height: 22px;
   margin-right: 5px;
 }
-
 
 .swap_form {
   display: flex;
