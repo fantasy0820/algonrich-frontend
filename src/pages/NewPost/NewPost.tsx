@@ -96,7 +96,7 @@ const TAGS_OPTION = [
 
 const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
+    [{ 'header': [1, 2, 3, 4, 5, false] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
     ['link', 'image'],
@@ -135,13 +135,7 @@ const props: UploadProps = {
 
 const ContactForm = () => {
 
-  const [description, setDescription] = useState({});
-  const [tagValue, setTagValue] = useState({});
-  const [title, setTitle] = useState({});
   const [quilValue, setQuilValue] = useState('');
-  const [publishState, setPublishState] = useState(false);
-  const [enableState, setEnableState] = useState(false);
-  const [metaTitle, setMetaTitle] = useState({});
   const [open, setOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -182,13 +176,13 @@ const ContactForm = () => {
       <FormProvider {...methods} >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={3} >
-            <Grid item xs={9} className="title">
+            <Grid item xs={12} md={12} className="title">
               Create New Post
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             {/* <Grid item xs={1} ></Grid> */}
-            <Grid item xs={9} md={9} className="post-block" >
+            <Grid item xs={12} md={9} className="post-block" >
               <Card sx={{ p: 3 }} className="post-card">
                 <Stack spacing={3}>
                   <RHFTextField name="title" label="Post Title" />
@@ -219,7 +213,7 @@ const ContactForm = () => {
                 </Stack>
               </Card>
             </Grid>
-            <Grid item xs={3} className="other-info" >
+            <Grid item xs={12} md={3} className="other-info" >
               <Card sx={{ p: 3 }} className="publish-switch">
                 <Stack spacing={3}>
                   <div>
