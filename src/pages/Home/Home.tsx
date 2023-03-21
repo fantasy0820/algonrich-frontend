@@ -9,7 +9,7 @@ import './Home.scss';
 import Team from 'components/Team';
 import useSwiperRef from 'hooks/useSwiper';
 import RoadmapBox from 'components/RoadmapBox';
-import { TeamAvatar, RoadmapInfo} from 'const/Consts';
+import { TeamAvatar, RoadmapInfo } from 'const/Consts';
 
 export default function Home() {
   const [nextEl, nextElRef] = useSwiperRef();
@@ -22,6 +22,11 @@ export default function Home() {
       duration: 1000,
     });
   }, [])
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  window.onresize = function () {
+    setWindowWidth(window.document.body.clientWidth);
+  }
   return (
     <div className="home mt-[0px]">
       <div className='home-content' id='home'>
@@ -120,7 +125,7 @@ export default function Home() {
                   </h3>
                   <p>
                     <Trans i18nKey={"textbox_2_content"}>
-                    Mean reversion is a mathematical method use in stock investing deviation of the stock market prices, often used as a buy or sell indicator. Trading around mean reversion is going to be use in the future of ALGO'S.
+                      Mean reversion is a mathematical method use in stock investing deviation of the stock market prices, often used as a buy or sell indicator. Trading around mean reversion is going to be use in the future of ALGO'S.
                     </Trans>
                   </p>
                 </div>
@@ -132,7 +137,7 @@ export default function Home() {
                   </h3>
                   <p>
                     <Trans i18nKey={"textbox_3_content"}>
-                    Yes, algorithms (Algos) also helps achieve consistency. The biggest challenge in the process is having a working and predictable product which we have already developed, Making our project stable even before becoming the great leader in the crypto market as we are going to be.
+                      Yes, algorithms (Algos) also helps achieve consistency. The biggest challenge in the process is having a working and predictable product which we have already developed, Making our project stable even before becoming the great leader in the crypto market as we are going to be.
                     </Trans>
                   </p>
                 </div>
@@ -178,7 +183,7 @@ export default function Home() {
                 <p className='text-[#B9B9BF] text-[18px] [word-spacing:4px]'><Trans i18nKey={'bepart_text'}>
                   Algonrich will be offering many features with a decentralize team that will leave our competitors behind. Algonrich has a mass potential to become a leader in the market. We have consistently demonstrated the power of innovation. A mega potential in the derivatives market is waiting to be un cap and we are ready to tap into our success with our plans, Join the team of future winners.</Trans></p>
               </div>
-              <div className='swiger-slide-btn md:flex justify-center md:justify-start space-x-3 mt-[40px]'>
+              <div className='swiger-slide-btn md:flex justify-center lg:justify-start space-x-3 mt-[40px]'>
                 <button className='w-[50px] h-[50px] bg-[#3d4db5] cursor-pointer' ref={prevElRef}>
                   <FontAwesomeIcon icon={faChevronLeft} color="white" size="2x" />
                 </button>
@@ -193,7 +198,7 @@ export default function Home() {
               data-aos-delay="50"
               data-aos-anchor-placement="center-bottom"
             >
-              <Team data={TeamAvatar} perview={window.innerWidth <= 768 ? 1 : 3} nav={{
+              <Team data={TeamAvatar} perview={windowWidth <= 768 ? 1 : (windowWidth < 1524 ? 2 : 3)} nav={{
                 prevEl,
                 nextEl,
               }} />
