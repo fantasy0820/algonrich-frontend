@@ -366,20 +366,25 @@ body {
 
 }
 
+#react-select-5-listbox {
+  background-color: #141a31;
+  display: block !important;
+}
+
 .custom-select-flg {
   width: 100px;
-
   .select-custom {
     div {
+      cursor: pointer;
       color: white;
       border-radius: unset;
-      background: transparent;
+      background-color: transparent;
       border-color: #3d4db5;
       border-radius: 4px;
       outline: none;
 
       &:hover {
-        color: #3d4db5
+        color: #3d4db5;
       }
     }
   }
