@@ -1,131 +1,128 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from "antd";
+import axios from "axios";
 import {
   faClock,
   faLayerGroup,
+  faCaretDown,
+  faCaretRight,
   faArrowDown,
   faCog,
   faWallet,
 } from "@fortawesome/free-solid-svg-icons";
+import { CONTRACT_ADDR } from "const/Consts";
 import tokenList from "utils/tokenList.json";
 import { shortenIfAddress } from "utils/address";
 import { Trans } from "react-i18next";
 import "./Swap.scss";
 import { toastInfo } from "helpers/toast.helper";
-import useConnect from "hooks/useConnect";
 import { useBalances, useSwap, useTrade } from "hooks/useContract";
+import { SwapType } from "types";
 import {
   RightOutlined,
+  ArrowDownOutlined,
   DownOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
+import { useConnect, useDisconnect, useNetwork, useAccount, useSendTransaction, useWaitForTransaction } from "wagmi";
+import { switchNetwork } from '@wagmi/core';
+import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import erc20abi from "erc-20-abi";
 
+interface DexPrices {
+  tokenOne: number;
+  tokenTwo: number;
+  ratio: number;
+}
+
 export default function Swap() {
+  const [openSelectFrom, setOpenSelectFrom] = useState(false);
   const [changeToken, setChangeToken] = useState(0);
+  const [openSelectTo, setOpenSelectTo] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [coinFrom, setCoinFrom] = useState(tokenList[0]);
-  const [tokenAmountFrom, setTokenAmountFrom] = useState(0);
-  const [coinTo, setCoinTo] = useState(tokenList[0]);
-  const [tokenAmountTo, setTokenAmountTo] = useState(0);
+  const [tokenAmountFrom, setTokenAmountFrom] = useState<any | null>(null);
+  const [coinTo, setCoinTo] = useState(tokenList[1]);
+  const [tokenAmountTo, setTokenAmountTo] = useState<any | null>(null);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [maxTokenFromAmount, setMaxTokenFromAmount] = useState(0);
   const [wallet, setWallet] = useState<string | null>(null);
   const [walletChainId, setChainId] = useState<string | null>(null);
+  const [prices, setPrices] = useState<DexPrices>({
+    tokenOne: 0,
+    tokenTwo: 0,
+    ratio: 1
+  });
+  const [slippage, setSlippage] = useState(2.5);
   const { bnb, updateBnb, tokenBalance, updateTokenBalance, getTokenBalance } =
     useBalances(56);
-  const { swapTokens, loading, disabled, error } = useSwap(56);
 
-  const {
-    connect,
-    disconnect,
-    isUnsupportedChainIdError,
-    chainId,
-    account,
-    active,
-    switchToBSC,
-  } = useConnect();
-  const {
-    getTradeAmount,
-    getOtherTradeAmount,
-    rate,
-    update: updateRate,
-    tradeAmount,
-  } = useTrade(56);
+    const { address, isConnected } = useAccount();
+  const { connect } = useConnect({
+    connector: new MetaMaskConnector(),
+  });
+  const { disconnect } = useDisconnect();
+  const { chain } = useNetwork();
 
-  const handleSwapToken = async () => {
-    if (!validateInput()) {
-      toastInfo("Input Invalid");
-      return;
-    }
-    swapTokens(
-      tokenAmountFrom,
-      coinFrom.address,
-      coinTo.address
-    ).then((res) => {
-      if (res) {
-        updateBnb();
-        updateTokenBalance();
-      }
-    });
-  };
-  const validateInput = () => {
-    if (
-      tokenAmountFrom == null ||
-      tokenAmountFrom <= 0 ||
-      tokenAmountFrom >= maxTokenFromAmount
-    ) {
-      return false;
-    }
-    return true;
-  };
-  useEffect(() => {
-    if (account) {
-      localStorage.setItem("walletAddress", String(account));
-      localStorage.setItem("chainId", String(chainId));
-    }
+  const [txDetails, setTxDetails] = useState({
+    to:null,
+    data: null,
+    value: null,
+  });
 
-    if (localStorage.getItem("walletAddress") !== null) {
-      setWallet(String(localStorage.getItem("walletAddress")));
+  const {data, sendTransaction} = useSendTransaction({
+    mode: "recklesslyUnprepared",
+    request: {
+      from: address,
+      to: String(txDetails.to),
+      data: String(txDetails.data),
+      value: String(txDetails.value),
     }
-    if (localStorage.getItem("chainId") !== null) {
-      setChainId(String(localStorage.getItem("chainId")));
-    }
+  });
 
-    let _temp_max = 0;
-    if (coinFrom.ticker === "BNB") {
-      _temp_max = bnb > 0.001 ? bnb - 0.001 : 0;
-      setMaxTokenFromAmount(_temp_max);
-      getTradeAmount(
-        tokenAmountFrom,
-        coinFrom.address,
-        coinTo.address
-      );
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+
+  const changeAmount = (e: any) => {
+    setTokenAmountFrom(e.target.value);
+
+    if(e.target.value && prices) {
+      setTokenAmountTo((e.target.value * prices.ratio).toFixed(2));
     } else {
-      getTokenBalance(coinFrom.address, erc20abi);
-      setMaxTokenFromAmount(tokenBalance);
-      getOtherTradeAmount(
-        tokenAmountFrom,
-        coinFrom.address,
-        coinTo.address
-      );
+      setTokenAmountTo(null);
     }
-
-    // disconnect
-  }, [coinFrom.ticker, coinTo.ticker, bnb, tokenBalance, wallet, walletChainId]);
+  }
 
   useEffect(() => {
-    if(!account) {
-      localStorage.clear()
+    const handleSwitchNetwork = async () => {
+      if(isConnected && chain?.id !== 56) {
+        await switchNetwork({
+          chainId: 56
+        })
+      }
+
+      if (isConnected) {
+        localStorage.setItem("walletAddress", String(address));
+        localStorage.setItem("chainId", String(chain?.id));
+      }
+
+      if (localStorage.getItem("walletAddress") !== null) {
+        setWallet(String(localStorage.getItem("walletAddress")));
+      }
+
+      if (localStorage.getItem("chainId") !== null) {
+        setChainId(String(localStorage.getItem("chainId")));
+      }
     }
 
-    if (tokenAmountFrom == 0) {
-      setTokenAmountTo(0);
-      return;
+    if(!isConnected) {
+      localStorage.clear();
     }
-
-    setTokenAmountTo(parseFloat(tradeAmount.toFixed(8)));
-  }, [tokenAmountFrom, tradeAmount]);
+    
+    handleSwitchNetwork();
+  }, [isConnected]);
 
   /**
    * Open modal dialog
@@ -137,27 +134,100 @@ export default function Swap() {
   }
 
   function modifyToken(i: number) {
-    setTokenAmountFrom(0);
-    setTokenAmountTo(0);
+    setPrices({
+      tokenOne: 0,
+      tokenTwo: 0,
+      ratio: 1
+    });
+    setTokenAmountFrom(null);
+    setTokenAmountTo(null);
     if (changeToken === 1) {
       setCoinFrom(tokenList[i]);
-      updateRate(tokenAmountFrom, coinFrom.address, coinTo.address);
+      fetchPrices(tokenList[i].address, coinTo.address)
     } else {
       setCoinTo(tokenList[i]);
-      updateRate(tokenAmountFrom, coinFrom.address, coinTo.address);
+      fetchPrices(coinFrom.address, tokenList[i].address)
     }
     setIsOpen(false);
   }
 
   function switchTokens() {
-    setTokenAmountFrom(0);
-    setTokenAmountTo(0);
+    setPrices({
+      tokenOne: 0,
+      tokenTwo: 0,
+      ratio: 1
+    });
+    setTokenAmountFrom(null);
+    setTokenAmountTo(null);
     const one = coinFrom;
     const two = coinTo;
     setCoinFrom(two);
     setCoinTo(one);
-    updateRate(tokenAmountFrom, coinFrom.address, coinTo.address);
+    fetchPrices(two.address, one.address);
   }
+
+  /**
+   * Get Price from api
+   * @param one address for coinFrom
+   * @param two address for coinTo
+   */
+  async function fetchPrices(one: string, two: string) {
+    const urlOne = `https://deep-index.moralis.io/api/v2/erc20/${one}/price?chain=bsc&exchange=pancakeswap-v2`;
+    const urlTwo = `https://deep-index.moralis.io/api/v2/erc20/${two}/price?chain=bsc&exchange=pancakeswap-v2`;
+    const responseOne = await axios.get(urlOne, {
+      headers: {
+        accept: 'application/json',
+        'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+      }
+    });
+
+    const responseTwo = await axios.get(urlTwo, {
+      headers: {
+        accept: 'application/json',
+        'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+      }
+    });
+
+    setPrices({
+      tokenOne: responseOne.data.usdPrice,
+      tokenTwo: responseTwo.data.usdPrice,
+      ratio: responseOne.data.usdPrice/responseTwo.data.usdPrice
+    });
+
+    console.log(prices)
+  }
+
+  async function fetchDexSwap(){
+    console.log(address)
+    const allowance = await axios.get(`https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${coinFrom.address}&walletAddress=${address}`)
+    if(allowance.data.allowance === "0"){
+      const approve = await axios.get(`https://api.1inch.io/v5.0/56/approve/transaction?tokenAddress=${coinFrom.address}`)
+      
+      setTxDetails(approve.data);
+      
+      console.log("not approved")
+      return
+    }
+
+    const tx = await axios.get(
+      `https://api.1inch.io/v5.0/56/swap?fromTokenAddress=${coinFrom.address}&toTokenAddress=${coinTo.address}&amount=${tokenAmountFrom.padEnd(coinFrom.decimals+tokenAmountFrom.length, '0')}&fromAddress=${address}&slippage=${slippage}`
+    )
+
+    let decimals = Number(`1E${coinTo.decimals}`)
+
+    setTokenAmountTo((Number(tx.data.toTokenAmount)/decimals).toFixed(2));
+    setTxDetails(tx.data.tx);
+  }
+
+  useEffect(() => {
+    fetchPrices(tokenList[0].address, tokenList[1].address)
+  }, []);
+
+  useEffect(()=>{
+    if(txDetails.to && isConnected){
+      sendTransaction();
+    }
+  }, [txDetails])
 
   return (
     <div>
@@ -243,7 +313,7 @@ export default function Swap() {
             </div>
           </div>
           <div className="swap_form_content_ratebar">
-            <span className="text-[20px]">{rate.toFixed(2)} </span>
+            <span className="text-[20px]">{prices.ratio.toFixed(2)} </span>
             <span className="text-[12px]">
               {coinFrom.ticker}/{coinTo.ticker}
             </span>
@@ -259,26 +329,7 @@ export default function Swap() {
                     placeholder="0"
                     min={0}
                     value={tokenAmountFrom}
-                    onInput={(e: any) => {
-                      setTokenAmountFrom(e.target.value);
-                      let amount = 0;
-                      if (e.target.value) {
-                        amount = parseFloat(e.target.value);
-                        if (coinFrom.ticker === "BNB") {
-                          getTradeAmount(
-                            amount,
-                            coinFrom.address,
-                            coinTo.address
-                          );
-                        } else {
-                          getOtherTradeAmount(
-                            amount,
-                            coinFrom.address,
-                            coinTo.address
-                          );
-                        }
-                      }
-                    }}
+                    onChange={changeAmount}
                     onKeyDown={(evt) =>
                       ["e", "E", "+", "-"].includes(evt.key) &&
                       evt.preventDefault()
@@ -286,7 +337,7 @@ export default function Swap() {
                   />
 
                   <div className="form_content_select">
-                    <div className="asset-from cursor-pointer" onClick={() => openModal(1)}>
+                    <div className="asset-from" onClick={() => openModal(1)}>
                       <img src={coinFrom.img} alt="assetOneLogo" className="assetLogo" />
                       <p className="coin-type-text">
                         {coinFrom.ticker}
@@ -317,26 +368,41 @@ export default function Swap() {
                   disabled={true}
                 />
                 <div className="form_content_select">
-                  <div className="asset-to cursor-pointer" onClick={() => openModal(2)}>
+                  <div className="asset-to" onClick={() => openModal(2)}>
                     <img src={coinTo.img} alt="assetOneLogo" className="assetLogo" />
                     {coinTo.ticker}
                     {(isOpen && changeToken === 2) && <DownOutlined />}
                     {!(isOpen && changeToken === 2) && <RightOutlined />}
                   </div>
+                  {/* <div
+                    className="select_header"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => openModal(2)}
+                  >
+                    <img src={coinTo.img} alt="assetOneLogo" className="assetLogo" />
+                    {coinTo.ticker}
+                    <FontAwesomeIcon
+                      icon={
+                        (isOpen === true && changeToken === 2) ? faCaretDown : faCaretRight
+                      }
+                      color="white"
+                      size="sm"
+                      className="icon"
+                    />
+                  </div> */}
                 </div>
               </div>
             </div>
           </div>
           <div className="swap_form_content_btn">
-            {wallet && !isUnsupportedChainIdError && walletChainId === "56" ? (
-              <button onClick={() => handleSwapToken()}>
+            {wallet && walletChainId === "56" ? (
+              <button onClick={() => fetchDexSwap()}>
                 <Trans i18nKey="text_swap">Swap</Trans>
               </button>
             ) : (
               <button
                 onClick={() => {
                   connect();
-                  switchToBSC();
                 }}
               >
                 <Trans i18nKey="text_connectwallet">Connect Wallet</Trans>
@@ -369,11 +435,11 @@ export default function Swap() {
                 </div>
                 <div className="swap_set">
                   <span>Slippage Tolerance</span>
-                  <ul>
-                    <li>0.1%</li>
-                    <li>0.5%</li>
-                    <li>1%</li>
-                    <li>10%</li>
+                  <ul className="">
+                    <li className="cursor-pointer" onClick={() => {setSlippage(0.1)}}>0.1%</li>
+                    <li className="cursor-pointer" onClick={() => {setSlippage(0.5)}}>0.5%</li>
+                    <li className="cursor-pointer" onClick={() => {setSlippage(1)}}>1%</li>
+                    <li className="cursor-pointer" onClick={() => {setSlippage(10)}}>10%</li>
                   </ul>
                 </div>
               </div>

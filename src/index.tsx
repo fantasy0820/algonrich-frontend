@@ -4,21 +4,35 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "./i18n";
-import { Web3ReactProvider } from '@web3-react/core';
-import { ethers } from 'ethers';
+import { configureChains, WagmiConfig, createClient } from "wagmi";
+import { bsc } from "wagmi/chains";
+import { publicProvider } from "wagmi/providers/public";
+// import { Web3ReactProvider } from '@web3-react/core';
+// import { ethers } from 'ethers';
+
+const { provider, webSocketProvider } = configureChains(
+  [bsc],
+  [publicProvider()]
+);
+
+const client = createClient({
+  autoConnect: true,
+  provider,
+  webSocketProvider,
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const getLibrary = (provider: any, connector: any) => {
-  return new ethers.providers.Web3Provider(provider)
-}
+// const getLibrary = (provider: any, connector: any) => {
+//   return new ethers.providers.Web3Provider(provider)
+// }
 
 root.render(
   <React.StrictMode>
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <WagmiConfig client={client}>
       <App />
-    </Web3ReactProvider>
+    </WagmiConfig>
   </React.StrictMode>
 );
 
