@@ -1,33 +1,243 @@
-$primary-hover-color: #3d4db5;
+.ant-input {
+  background-color: #1f2639 !important;
+  color: white !important;
+  border-width: 0px !important;
+  height: 96px !important;
+  margin-bottom: 5px;
+  font-size: 35px;
+  border-radius: 12px !important;
+}
+
+.ant-input::placeholder {
+  color: #5f6783 !important;
+}
+
+.ant-popover-arrow {
+  visibility: hidden;
+}
+
+.ant-popover-title {
+  color: white !important;
+}
+
+.ant-popover-inner-content {
+  color: white !important;
+}
+
+.ant-popover-inner {
+  min-width: 260px !important;
+  min-height: 140px !important;
+  border: 1px solid #21273a;
+  background-color: #0e111b !important;
+}
+
+.ant-radio-group {
+  margin-top: 10px;
+}
+
+.ant-radio-button-wrapper {
+  background-color: #1f2639 !important;
+  color: white !important;
+  font-weight: 500;
+  border-color: white !important;
+}
+
+.ant-radio-button-wrapper-checked {
+  border-color: white !important;
+  background-color: #363e54 !important;
+}
+
+.ant-radio-button-wrapper-checked::before {
+  background-color: white !important;
+}
+
+.ant-modal-content {
+  background-color: #0e111b !important;
+  color: white !important;
+  padding: 0px !important;
+}
+
+.ant-modal {
+  border: 1px solid #363e54;
+  width: 400px !important;
+  border-radius: 10px;
+}
+
+.ant-modal-header {
+  background-color: #0e111b !important;
+}
+
+.ant-modal-title {
+  color: white !important;
+  padding-top: 17px !important;
+  margin-left: 20px !important;
+}
+
+.ant-modal-close-icon {
+  color: #363e54 !important;
+  transition: 0.3s;
+}
+
+.ant-modal-close-icon:hover {
+  color: white !important;
+}
+
+.tradeBox {
+  width: 440px;
+  background-color: #0E111B;
+  border: 2px solid #21273a;
+  min-height: 300px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 30px;
+}
+
+.tradeBoxHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 98%;
+}
+
+.cog {
+  color: #51586f;
+  transition: 0.3s;
+}
+
+.cog:hover {
+  color: white;
+  rotate: 90deg;
+  cursor: pointer;
+}
+
+.switchButton {
+  background-color: #3a4157;
+  width: 25px;
+  height: 25px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border-radius: 8px;
+  position: absolute;
+  top: 86px;
+  left: 180px;
+  color: #5F6783;
+  border: 3px solid #0E111B;
+  font-size: 12px;
+  transition: 0.3s
+}
+
+.dollarAmount {
+  position: absolute;
+  top: 75px;
+  left: 14px;
+  font-size: 10px;
+  color: #5F6783;
+}
+
+.switchButton:hover {
+  color: white;
+  cursor: pointer;
+}
+
+.inputs {
+  position: relative;
+}
+
+.assetOne {
+  position: absolute;
+  min-width: 50px;
+  height: 30px;
+  background-color: #3a4157;
+  top: 36px;
+  right: 20px;
+  border-radius: 100px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  padding-right: 8px;
+}
+
+.assetTwo {
+  position: absolute;
+  min-width: 50px;
+  height: 30px;
+  background-color: #3a4157;
+  top: 135px;
+  right: 20px;
+  border-radius: 100px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  padding-right: 8px;
+}
+
+.assetOne:hover{
+  cursor: pointer;
+}
+
+.assetTwo:hover{
+  cursor: pointer;
+}
+
+.assetLogo {
+  height: 22px;
+  margin-left: 5px;
+}
+
+.swapButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #243056; 
+  width: calc(100%);
+  height: 55px;
+  font-size: 20px;
+  border-radius: 12px;
+  color: #5981F3;
+  font-weight: bold;
+  transition: 0.3s;
+  margin-bottom: 30px;
+  margin-top: 8px;
+}
+
+.swapButton[disabled] {
+  background-color: #243056;
+  opacity: 0.4;
+  color: #5982f39b;
+}
+
+.swapButton[disabled]:hover {
+  cursor: not-allowed;
+  background-color: #243056;
+}
+
+.swapButton:hover {
+  cursor: pointer;
+  background-color: #3b4874
+}
 
 .tokenLogo {
   height: 40px;
   width: 40px;
 }
 
-.ant-modal-content {
-  background: #0c1226 !important;
-}
-
-.ant-modal-title {
-  background: #0c1226 !important;
-  color: #fff !important;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 .modalContent {
-  border-top: 1px solid #dbe5ff;
+  border-top: 1px solid #363e54;
   /* padding-top: 20px; */
-  background: #0c1226 !important;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 10px
 }
 
 .tokenChoice {
@@ -37,257 +247,22 @@ input::-webkit-inner-spin-button {
   padding-left: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-
-  .tokenName {
-    color: #fff;
-    margin-left: 10px;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .tokenTicker {
-    margin-left: 10px;
-    font-size: 13px;
-    font-weight: 300;
-    color: #51596f;
-  }
 }
 
 .tokenChoice:hover {
   cursor: pointer;
-  background-color: white;
-
-  .tokenName {
-    color: black;
-    margin-left: 10px;
-    font-size: 16px;
-    font-weight: 500;
-  }
-
-  .tokenTicker {
-    margin-left: 10px;
-    font-size: 13px;
-    font-weight: 300;
-    color: black;
-  }
+  background-color: #1f2639;
 }
 
-.assetLogo {
-  width: 22px;
-  height: 22px;
-  margin-right: 5px;
+.tokenName {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
-.swap_form {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-
-  &_content {
-    max-width: 32rem;
-    padding: 30px;
-    border-radius: 4px;
-    color: white;
-    background: #131740;
-    font-family: sans-serif;
-    position: relative;
-
-    &_top {
-      margin-bottom: 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      & .swap_control_left {
-        span {
-          border: 1px solid #ff06b7;
-          background: #ff06b7;
-          color: #fff;
-          padding: 5px 20px;
-          cursor: pointer;
-        }
-      }
-
-      & .swap_contol_right {
-        display: flex;
-        justify-content: space-between;
-
-        & .icon {
-          padding: 4px;
-        }
-      }
-    }
-
-    &_inner_form {
-      .form {
-        text-align: start;
-
-        label {
-          display: block;
-          width: 100%;
-          font-weight: 600;
-          font-size: 14px;
-          color: #fff;
-          text-transform: capitalize;
-        }
-
-        &_content {
-          margin-bottom: 20px;
-          margin-top: 5px;
-          display: flex;
-
-          &_input {
-            border: 1px solid #0d102d;
-            background: #0f1336;
-            height: 52px;
-            font-size: 24px;
-            border-radius: 0px;
-            padding: 5px 15px;
-            width: 100%;
-            border-right: 0px solid #f1f1f1;
-            outline: none;
-            border-radius: 10px;
-          }
-          .asset-from {
-            position: absolute;
-            min-width: 80px;
-            padding-left: 10px;
-            height: 40px;
-            background-color: #3a4157;
-            top: 155px;
-            right: 38px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 5px;
-            font-weight: bold;
-            font-size: 17px;
-            padding-right: 8px;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
-            font-weight: 500;
-            color: white;
-            background: #050830;
-
-            .icon {
-              position: absolute;
-              right: 1.1em;
-            }
-          }
-          .asset-to {
-            position: absolute;
-            min-width: 80px;
-            padding-left: 10px;
-            height: 40px;
-            background-color: #3a4157;
-            top: 293px;
-            right: 38px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 5px;
-            font-weight: bold;
-            font-size: 17px;
-            padding-right: 8px;
-            box-shadow: 0 2px 3px rgba(0, 0, 0, 0.15);
-            font-weight: 500;
-            color: white;
-            background: #050830;
-
-            .icon {
-              position: absolute;
-              right: 1.1em;
-            }
-          }
-        }
-      }
-    }
-
-    &_middle_bar {
-      display: flex;
-      justify-content: center;
-
-      a {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #ff06b7;
-        border-radius: 50%;
-      }
-    }
-
-    &_btn {
-      margin-top: 40px;
-
-      button {
-        width: 100%;
-        height: 50px;
-        background-color: #ff06b7;
-        color: white;
-        font-size: 18px;
-        font-weight: 600;
-
-        &:hover {
-          background: #ab46d2;
-          transition: 0.4s;
-        }
-      }
-    }
-  }
-
-  .modal {
-    position: absolute;
-    top: 90px;
-    width: 90%;
-    // translate: -30px;
-    // padding-left: 20px;
-    // padding-right: 20px;
-    // border: 1px solid white;
-    box-shadow: 0px 0px 7px $primary-hover-color;
-
-    &_setting {
-      padding: 20px;
-      background-color: #131740;
-
-      .modal_header {
-        text-align: start;
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-
-        h3 {
-          margin-left: 5px;
-          font-size: 20px;
-        }
-      }
-
-      .modal_content {
-        .swap_set {
-          text-align: start;
-          margin-bottom: 20px;
-
-          ul {
-            padding: 20px 0;
-            display: flex;
-
-            li {
-              padding: 5px 10px;
-              background: #ff06b7;
-              margin-right: 10px;
-              min-width: 60px;
-              text-align: center;
-            }
-          }
-        }
-      }
-
-      &.dis-none {
-        display: none;
-        transition: all 1s ease;
-      }
-    }
-  }
+.tokenTicker {
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: 300;
+  color: #51596f;
 }

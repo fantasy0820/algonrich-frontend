@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Modal } from "antd";
-import axios from "axios";
+import { Input, Popover, Radio, Modal, message } from "antd";
 import {
-  faClock,
-  faLayerGroup,
-  faCaretDown,
-  faCaretRight,
-  faArrowDown,
-  faCog,
-  faWallet,
-} from "@fortawesome/free-solid-svg-icons";
-import { CONTRACT_ADDR } from "const/Consts";
-import tokenList from "utils/tokenList.json";
-import { shortenIfAddress } from "utils/address";
-import { Trans } from "react-i18next";
-import "./Swap.scss";
-import { toastInfo } from "helpers/toast.helper";
-import { useBalances, useSwap, useTrade } from "hooks/useContract";
-import { SwapType } from "types";
-import {
-  RightOutlined,
   ArrowDownOutlined,
   DownOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
+import tokenList from "utils/tokenList.json";
+import { shortenIfAddress } from "utils/address";
+// import { Trans } from "react-i18next";
+import "./Swap.scss";
 import { useConnect, useDisconnect, useNetwork, useAccount, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { switchNetwork } from '@wagmi/core';
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import erc20abi from "erc-20-abi";
 
 interface DexPrices {
   tokenOne: number;
@@ -37,39 +21,33 @@ interface DexPrices {
 }
 
 export default function Swap() {
-  const [openSelectFrom, setOpenSelectFrom] = useState(false);
-  const [changeToken, setChangeToken] = useState(0);
-  const [openSelectTo, setOpenSelectTo] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  const [slippage, setSlippage] = useState(2.5);
+  const [tokenOneAmount, setTokenOneAmount] = useState(0);
+  const [tokenTwoAmount, setTokenTwoAmount] = useState(0);
+  const [tokenOne, setTokenOne] = useState(tokenList[0]);
+  const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
   const [isOpen, setIsOpen] = useState(false);
-  const [coinFrom, setCoinFrom] = useState(tokenList[0]);
-  const [tokenAmountFrom, setTokenAmountFrom] = useState<any | null>(null);
-  const [coinTo, setCoinTo] = useState(tokenList[1]);
-  const [tokenAmountTo, setTokenAmountTo] = useState<any | null>(null);
-  const [openSettingModal, setOpenSettingModal] = useState(false);
-  const [maxTokenFromAmount, setMaxTokenFromAmount] = useState(0);
-  const [wallet, setWallet] = useState<string | null>(null);
-  const [walletChainId, setChainId] = useState<string | null>(null);
+  const [changeToken, setChangeToken] = useState(1);
   const [prices, setPrices] = useState<DexPrices>({
     tokenOne: 0,
     tokenTwo: 0,
     ratio: 1
   });
-  const [slippage, setSlippage] = useState(2.5);
-  const { bnb, updateBnb, tokenBalance, updateTokenBalance, getTokenBalance } =
-    useBalances(56);
-
-    const { address, isConnected } = useAccount();
-  const { connect } = useConnect({
-    connector: new MetaMaskConnector(),
-  });
-  const { disconnect } = useDisconnect();
-  const { chain } = useNetwork();
-
+  const [wallet, setWallet] = useState('');
+  const [walletChainId, setChainId] = useState('');
   const [txDetails, setTxDetails] = useState({
-    to:null,
+    to: null,
     data: null,
     value: null,
   });
+
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect({
+    connector: new MetaMaskConnector(),
+  });
+  // const { disconnect } = useDisconnect();
+  const { chain } = useNetwork();
 
   const {data, sendTransaction} = useSendTransaction({
     mode: "recklesslyUnprepared",
@@ -86,12 +64,12 @@ export default function Swap() {
   });
 
   const changeAmount = (e: any) => {
-    setTokenAmountFrom(e.target.value);
+    setTokenOneAmount(e.target.value);
 
     if(e.target.value && prices) {
-      setTokenAmountTo((e.target.value * prices.ratio).toFixed(2));
+      setTokenTwoAmount(Number((e.target.value * prices.ratio).toFixed(2)));
     } else {
-      setTokenAmountTo(null);
+      setTokenTwoAmount(0);
     }
   }
 
@@ -124,9 +102,13 @@ export default function Swap() {
     handleSwitchNetwork();
   }, [isConnected]);
 
+  function handleSlippageChange(e: any) {
+    setSlippage(e.target.value);
+  }
+
   /**
    * Open modal dialog
-   * @param asset 1: coinFrom 2: coinTo
+   * @param asset 1: tokenOne 2: tokenTwo
    */
   function openModal(asset: number) {
     setChangeToken(asset);
@@ -139,14 +121,14 @@ export default function Swap() {
       tokenTwo: 0,
       ratio: 1
     });
-    setTokenAmountFrom(null);
-    setTokenAmountTo(null);
+    setTokenOneAmount(0);
+    setTokenTwoAmount(0);
     if (changeToken === 1) {
-      setCoinFrom(tokenList[i]);
-      fetchPrices(tokenList[i].address, coinTo.address)
+      setTokenOne(tokenList[i]);
+      fetchPrices(tokenList[i].address, tokenTwo.address)
     } else {
-      setCoinTo(tokenList[i]);
-      fetchPrices(coinFrom.address, tokenList[i].address)
+      setTokenTwo(tokenList[i]);
+      fetchPrices(tokenOne.address, tokenList[i].address)
     }
     setIsOpen(false);
   }
@@ -157,19 +139,19 @@ export default function Swap() {
       tokenTwo: 0,
       ratio: 1
     });
-    setTokenAmountFrom(null);
-    setTokenAmountTo(null);
-    const one = coinFrom;
-    const two = coinTo;
-    setCoinFrom(two);
-    setCoinTo(one);
+    setTokenOneAmount(0);
+    setTokenTwoAmount(0);
+    const one = tokenOne;
+    const two = tokenTwo;
+    setTokenOne(two);
+    setTokenTwo(one);
     fetchPrices(two.address, one.address);
   }
 
   /**
    * Get Price from api
-   * @param one address for coinFrom
-   * @param two address for coinTo
+   * @param one address for tokenOne
+   * @param two address for tokenTwo
    */
   async function fetchPrices(one: string, two: string) {
     const urlOne = `https://deep-index.moralis.io/api/v2/erc20/${one}/price?chain=bsc&exchange=pancakeswap-v2`;
@@ -199,9 +181,9 @@ export default function Swap() {
 
   async function fetchDexSwap(){
     console.log(address)
-    const allowance = await axios.get(`https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${coinFrom.address}&walletAddress=${address}`)
+    const allowance = await axios.get(`https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`)
     if(allowance.data.allowance === "0"){
-      const approve = await axios.get(`https://api.1inch.io/v5.0/56/approve/transaction?tokenAddress=${coinFrom.address}`)
+      const approve = await axios.get(`https://api.1inch.io/v5.0/56/approve/transaction?tokenAddress=${tokenOne.address}`)
       
       setTxDetails(approve.data);
       
@@ -210,12 +192,12 @@ export default function Swap() {
     }
 
     const tx = await axios.get(
-      `https://api.1inch.io/v5.0/56/swap?fromTokenAddress=${coinFrom.address}&toTokenAddress=${coinTo.address}&amount=${tokenAmountFrom.padEnd(coinFrom.decimals+tokenAmountFrom.length, '0')}&fromAddress=${address}&slippage=${slippage}`
+      `https://api.1inch.io/v5.0/56/swap?fromTokenAddress=${tokenOne.address}&toTokenAddress=${tokenTwo.address}&amount=${tokenOneAmount.toString().padEnd(tokenOne.decimals+tokenOneAmount.toString().length, '0')}&fromAddress=${address}&slippage=${slippage}`
     )
 
-    let decimals = Number(`1E${coinTo.decimals}`)
+    let decimals = Number(`1E${tokenTwo.decimals}`)
 
-    setTokenAmountTo((Number(tx.data.toTokenAmount)/decimals).toFixed(2));
+    setTokenTwoAmount(Number((Number(tx.data.toTokenAmount)/decimals).toFixed(2)));
     setTxDetails(tx.data.tx);
   }
 
@@ -229,224 +211,121 @@ export default function Swap() {
     }
   }, [txDetails])
 
+  useEffect(()=>{
+
+    messageApi.destroy();
+
+    if(isLoading){
+      messageApi.open({
+        type: 'loading',
+        content: 'Transaction is Pending...',
+        duration: 0,
+      })
+    }    
+
+  },[isLoading])
+
+  useEffect(()=>{
+    messageApi.destroy();
+    if(isSuccess){
+      messageApi.open({
+        type: 'success',
+        content: 'Transaction Successful',
+        duration: 1.5,
+      })
+    }else if(txDetails.to){
+      messageApi.open({
+        type: 'error',
+        content: 'Transaction Failed',
+        duration: 1.50,
+      })
+    }
+
+
+  },[isSuccess])
+
+  const settings = (
+    <>
+      <div>Slippage Tolerance</div>
+      <div>
+        <Radio.Group value={slippage} onChange={handleSlippageChange}>
+          <Radio.Button value={0.5}>0.5%</Radio.Button>
+          <Radio.Button value={2.5}>2.5%</Radio.Button>
+          <Radio.Button value={5}>5.0%</Radio.Button>
+        </Radio.Group>
+      </div>
+    </>
+  );
+
   return (
-    <div>
-
-      <div className="justify-between mx-auto w-[95%] lg:w-[90%] swap_form py-[150px] gap-[100px] flex-col md:flex-row items-center">
-        <Modal
-          open={isOpen}
-          footer={null}
-          style={{ padding: 0 }}
-          onCancel={() => setIsOpen(false)}
-          title="Select a token"
-        >
-          <div className="modalContent" >
-            {tokenList?.map((e, i) => {
-              return (
-                <div
-                  className="tokenChoice"
-                  key={i}
-                  onClick={() => {
-                    modifyToken(i);
-                  }}
-                >
-                  <img src={e.img} alt={e.ticker} className="tokenLogo" />
-                  <div className="tokenChoiceNames">
-                    <div className="tokenName">{e.name}</div>
-                    <div className="tokenTicker">{e.ticker}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Modal>
-        <div className="max-w-[500px] text-left ml-[20px]">
-          <p className="uppercase tracking-[1px] font-[700] text-[17px] text-white mb-[10px]">
-            Coin Swap
-          </p>
-          <h2 className="text-[52px] text-white font-[700] leading-[60px] mb-[15px]">
-            You can swap <span className="text-[#ff06b7]">Algos</span> here
-          </h2>
-          <p className="text-[18px] leading-[28px] text-[#ddd]">
-            Take advantage now of our prices's and rewards.
-          </p>
-        </div>
-        <div className="swap_form_content w-[90%] md:max-w-[450px]">
-          <div className="swap_form_content_top">
-            <div className="swap_control_left">
-              {wallet && (
-                <span
-                  className="flex"
-                  onClick={() => {
-                    disconnect();
-                    setWallet("");
-                    setChainId("");
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={faWallet}
-                    color="white"
-                    size="xs"
-                    style={{
-                      marginRight: "10px",
-                      border: "1px solid",
-                      borderRadius: "50%",
-                      padding: "3px",
-                    }}
-                  />
-                  {shortenIfAddress(wallet)}
-                </span>
-              )}
-            </div>
-            <div className="swap_contol_right">
+    <>
+      {contextHolder}
+      <Modal
+        open={isOpen}
+        footer={null}
+        onCancel={() => setIsOpen(false)}
+        title="Select a token"
+      >
+        <div className="modalContent">
+          {tokenList?.map((e, i) => {
+            return (
               <div
-                className="icon"
-                onClick={() => {
-                  setOpenSettingModal(!openSettingModal);
-                }}
+                className="tokenChoice"
+                key={i}
+                onClick={() => modifyToken(i)}
               >
-                <FontAwesomeIcon icon={faLayerGroup} color="white" size="xl" />
-              </div>
-              <div className="icon">
-                <FontAwesomeIcon icon={faClock} color="white" size="xl" />
-              </div>
-            </div>
-          </div>
-          <div className="swap_form_content_ratebar">
-            <span className="text-[20px]">{prices.ratio.toFixed(2)} </span>
-            <span className="text-[12px]">
-              {coinFrom.ticker}/{coinTo.ticker}
-            </span>
-          </div>
-          <div className="swap_form_content_inner_form">
-            <div className="form">
-              <label htmlFor="">
-                From ({"Max :" + maxTokenFromAmount.toFixed(5) + " " + coinFrom.ticker})
-                <div className="form_content">
-                  <input
-                    type="number"
-                    className="form_content_input"
-                    placeholder="0"
-                    min={0}
-                    value={tokenAmountFrom}
-                    onChange={changeAmount}
-                    onKeyDown={(evt) =>
-                      ["e", "E", "+", "-"].includes(evt.key) &&
-                      evt.preventDefault()
-                    }
-                  />
-
-                  <div className="form_content_select">
-                    <div className="asset-from" onClick={() => openModal(1)}>
-                      <img src={coinFrom.img} alt="assetOneLogo" className="assetLogo" />
-                      <p className="coin-type-text">
-                        {coinFrom.ticker}
-                      </p>
-                    {(isOpen && changeToken === 1) && <DownOutlined />}
-                    {!(isOpen && changeToken === 1) && <RightOutlined />}
-                    </div>
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <div className="swap_form_content_middle_bar">
-            <a href="#" onClick={switchTokens}>
-              <FontAwesomeIcon icon={faArrowDown} color="white" size="lg" />
-            </a>
-          </div>
-          <div className="swap_form_content_inner_form">
-            <div className="form">
-              <label htmlFor="">To</label>
-              <div className="form_content">
-                <input
-                  type="number"
-                  className="form_content_input"
-                  placeholder="0"
-                  min={0}
-                  value={tokenAmountTo}
-                  disabled={true}
-                />
-                <div className="form_content_select">
-                  <div className="asset-to" onClick={() => openModal(2)}>
-                    <img src={coinTo.img} alt="assetOneLogo" className="assetLogo" />
-                    {coinTo.ticker}
-                    {(isOpen && changeToken === 2) && <DownOutlined />}
-                    {!(isOpen && changeToken === 2) && <RightOutlined />}
-                  </div>
-                  {/* <div
-                    className="select_header"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => openModal(2)}
-                  >
-                    <img src={coinTo.img} alt="assetOneLogo" className="assetLogo" />
-                    {coinTo.ticker}
-                    <FontAwesomeIcon
-                      icon={
-                        (isOpen === true && changeToken === 2) ? faCaretDown : faCaretRight
-                      }
-                      color="white"
-                      size="sm"
-                      className="icon"
-                    />
-                  </div> */}
+                <img src={e.img} alt={e.ticker} className="tokenLogo" />
+                <div className="tokenChoiceNames">
+                  <div className="tokenName">{e.name}</div>
+                  <div className="tokenTicker">{e.ticker}</div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="swap_form_content_btn">
-            {wallet && walletChainId === "56" ? (
-              <button onClick={() => fetchDexSwap()}>
-                <Trans i18nKey="text_swap">Swap</Trans>
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  connect();
-                }}
-              >
-                <Trans i18nKey="text_connectwallet">Connect Wallet</Trans>
-              </button>
-            )}
-          </div>
-          <div className="modal">
-            <div
-              className={
-                openSettingModal ? "modal_setting" : "modal_setting dis-none"
-              }
+            );
+          })}
+        </div>
+      </Modal>
+      <div className="flex justify-center mx-auto w-full min-h-screen items-center">
+        <div className="tradeBox">
+          <div className="tradeBoxHeader py-5">
+            <h4 className="text-white">Swap</h4>
+            <Popover
+              content={settings}
+              title="Settings"
+              trigger="click"
+              placement="bottomRight"
             >
-              <div className="modal_header">
-                <FontAwesomeIcon
-                  icon={faCog}
-                  color="white"
-                  size="xl"
-                  className="icon"
-                />
-                <h3>Setting</h3>
-              </div>
-              <div className="modal_content">
-                <div className="swap_set">
-                  <span>Default Transaction Speed</span>
-                  <ul>
-                    <li>standard (6)</li>
-                    <li>fast (7)</li>
-                    <li>instant (8)</li>
-                  </ul>
-                </div>
-                <div className="swap_set">
-                  <span>Slippage Tolerance</span>
-                  <ul className="">
-                    <li className="cursor-pointer" onClick={() => {setSlippage(0.1)}}>0.1%</li>
-                    <li className="cursor-pointer" onClick={() => {setSlippage(0.5)}}>0.5%</li>
-                    <li className="cursor-pointer" onClick={() => {setSlippage(1)}}>1%</li>
-                    <li className="cursor-pointer" onClick={() => {setSlippage(10)}}>10%</li>
-                  </ul>
-                </div>
-              </div>
+              <SettingOutlined className="cog" />
+            </Popover>
+          </div>
+          <div className="inputs">
+            <Input
+              placeholder="0"
+              value={tokenOneAmount}
+              onChange={changeAmount}
+              disabled={!prices}
+            />
+            <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
+            <div className="switchButton" onClick={switchTokens}>
+              <ArrowDownOutlined className="switchArrow" />
+            </div>
+            <div className="assetOne" onClick={() => openModal(1)}>
+              <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
+              {tokenOne.ticker}
+              <DownOutlined />
+            </div>
+            <div className="assetTwo" onClick={() => openModal(2)}>
+              <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
+              {tokenTwo.ticker}
+              <DownOutlined />
             </div>
           </div>
+          {(wallet && walletChainId == '56') ? (
+            <div className="swapButton" onClick={fetchDexSwap}>Swap</div>
+          ) : (
+            <div className="swapButton" onClick={() => connect()}>Connect Wallet</div>  
+          )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
