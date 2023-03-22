@@ -13,6 +13,8 @@ import "./Swap.scss";
 import { useConnect, useDisconnect, useNetwork, useAccount, useSendTransaction, useWaitForTransaction } from "wagmi";
 import { switchNetwork } from '@wagmi/core';
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
+import { ethers } from "ethers";
+import { isAddress } from "ethers/lib/utils.js";
 
 interface DexPrices {
   tokenOne: number;
@@ -25,6 +27,8 @@ export default function Swap() {
   const [slippage, setSlippage] = useState(2.5);
   const [tokenOneAmount, setTokenOneAmount] = useState(0);
   const [tokenTwoAmount, setTokenTwoAmount] = useState(0);
+  const [tokenOneBalance, setTokenOneBalance] = useState("0.0")
+  const [tokenTwoBalance, setTokenTwoBalance] = useState("0.0")
   const [tokenOne, setTokenOne] = useState(tokenList[0]);
   const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
   const [isOpen, setIsOpen] = useState(false);
@@ -34,8 +38,6 @@ export default function Swap() {
     tokenTwo: 0,
     ratio: 1
   });
-  const [wallet, setWallet] = useState('');
-  const [walletChainId, setChainId] = useState('');
   const [txDetails, setTxDetails] = useState({
     to: null,
     data: null,
@@ -46,7 +48,7 @@ export default function Swap() {
   const { connect } = useConnect({
     connector: new MetaMaskConnector(),
   });
-  // const { disconnect } = useDisconnect();
+  const { disconnect } = useDisconnect();
   const { chain } = useNetwork();
 
   const {data, sendTransaction} = useSendTransaction({
@@ -81,23 +83,23 @@ export default function Swap() {
         })
       }
 
-      if (isConnected) {
-        localStorage.setItem("walletAddress", String(address));
-        localStorage.setItem("chainId", String(chain?.id));
-      }
+      // if (isConnected) {
+      //   localStorage.setItem("walletAddress", String(address));
+      //   localStorage.setItem("chainId", String(chain?.id));
+      // }
 
-      if (localStorage.getItem("walletAddress") !== null) {
-        setWallet(String(localStorage.getItem("walletAddress")));
-      }
+      // if (localStorage.getItem("walletAddress") !== null) {
+      //   setWallet(String(localStorage.getItem("walletAddress")));
+      // }
 
-      if (localStorage.getItem("chainId") !== null) {
-        setChainId(String(localStorage.getItem("chainId")));
-      }
+      // if (localStorage.getItem("chainId") !== null) {
+      //   setChainId(String(localStorage.getItem("chainId")));
+      // }
     }
 
-    if(!isConnected) {
-      localStorage.clear();
-    }
+    // if(!isConnected) {
+    //   localStorage.clear();
+    // }
     
     handleSwitchNetwork();
   }, [isConnected]);
@@ -154,6 +156,9 @@ export default function Swap() {
    * @param two address for tokenTwo
    */
   async function fetchPrices(one: string, two: string) {
+    setTokenOneBalance("0.0")
+    setTokenTwoBalance("0.0")
+
     const urlOne = `https://deep-index.moralis.io/api/v2/erc20/${one}/price?chain=bsc&exchange=pancakeswap-v2`;
     const urlTwo = `https://deep-index.moralis.io/api/v2/erc20/${two}/price?chain=bsc&exchange=pancakeswap-v2`;
     const responseOne = await axios.get(urlOne, {
@@ -176,7 +181,36 @@ export default function Swap() {
       ratio: responseOne.data.usdPrice/responseTwo.data.usdPrice
     });
 
-    console.log(prices)
+    if(isConnected) {
+      const url = `https://deep-index.moralis.io/api/v2/${address}/erc20`;
+
+      const balanceOne = await axios.get(url, {
+        headers: {
+          accept: 'application/json',
+          'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+        },
+        params: {
+          "chain": "bsc",
+          "token_addresses": one,
+        }
+      })
+
+      const balanceTwo = await axios.get(url, {
+        headers: {
+          accept: 'application/json',
+          'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+        },
+        params: {
+          "chain": "bsc",
+          "token_addresses": two,
+        }
+      })
+
+      const formattedBalanceOne = balanceOne.data[0] ? Number(ethers.utils.formatEther(balanceOne.data[0]?.balance)).toFixed(5) : "0.0";
+      const formattedBalanceTwo = balanceTwo.data[0] ? Number(ethers.utils.formatEther(balanceTwo.data[0]?.balance)).toFixed(5) : "0.0";
+      setTokenOneBalance(formattedBalanceOne)
+      setTokenTwoBalance(formattedBalanceTwo)
+    }
   }
 
   async function fetchDexSwap(){
@@ -203,7 +237,7 @@ export default function Swap() {
 
   useEffect(() => {
     fetchPrices(tokenList[0].address, tokenList[1].address)
-  }, []);
+  }, [isConnected]);
 
   useEffect(()=>{
     if(txDetails.to && isConnected){
@@ -218,6 +252,12 @@ export default function Swap() {
       messageApi.open({
         type: 'success',
         content: 'Metamask is connected',
+        duration: 1.5,
+      })
+    } else {
+      messageApi.open({
+        type: 'warning',
+        content: 'Metamask is disconnected',
         duration: 1.5,
       })
     }
@@ -299,8 +339,8 @@ export default function Swap() {
             <img src="assets/images/bsc.svg" alt="Binance Smart Chain" className="h-7 w-7 pr-[10px]" />
             Binance Smart Chain
           </div>
-          {wallet && walletChainId === "56" ? (
-            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer">{shortenIfAddress(wallet)}</div>
+          {isConnected && chain?.id === 56 ? (
+            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer" onClick={() => disconnect()}>{shortenIfAddress(address)}</div>
           ) : (
             <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer" onClick={() => connect()}>Connect</div>
           )}
@@ -330,11 +370,13 @@ export default function Swap() {
               <div className="switchButton" onClick={switchTokens}>
                 <ArrowDownOutlined className="switchArrow" />
               </div>
+              <div className="absolute top-[10px] right-5 text-[#5981e9]">Balance: {tokenOneBalance}</div>
               <div className="assetOne" onClick={() => openModal(1)}>
                 <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
                 {tokenOne.ticker}
                 <DownOutlined />
               </div>
+              <div className="absolute top-[110px] right-5 text-[#5981e9]">Balance: {tokenTwoBalance}</div>
               <div className="assetTwo" onClick={() => openModal(2)}>
                 <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
                 {tokenTwo.ticker}
