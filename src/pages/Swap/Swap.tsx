@@ -212,7 +212,18 @@ export default function Swap() {
   }, [txDetails])
 
   useEffect(()=>{
+    messageApi.destroy();
 
+    if(isConnected) {
+      messageApi.open({
+        type: 'success',
+        content: 'Metamask is connected',
+        duration: 1.5,
+      })
+    }
+  }, [isConnected])
+
+  useEffect(()=>{
     messageApi.destroy();
 
     if(isLoading){
@@ -222,11 +233,11 @@ export default function Swap() {
         duration: 0,
       })
     }    
-
   },[isLoading])
 
   useEffect(()=>{
     messageApi.destroy();
+
     if(isSuccess){
       messageApi.open({
         type: 'success',
@@ -240,8 +251,6 @@ export default function Swap() {
         duration: 1.50,
       })
     }
-
-
   },[isSuccess])
 
   const settings = (
@@ -284,46 +293,60 @@ export default function Swap() {
           })}
         </div>
       </Modal>
-      <div className="flex justify-center mx-auto w-full min-h-screen items-center">
-        <div className="tradeBox">
-          <div className="tradeBoxHeader py-5">
-            <h4 className="text-white">Swap</h4>
-            <Popover
-              content={settings}
-              title="Settings"
-              trigger="click"
-              placement="bottomRight"
-            >
-              <SettingOutlined className="cog" />
-            </Popover>
+      <div className="flex flex-col mx-auto w-full gap-20 py-[140px]">
+        <div className="flex justify-end items-right gap-5 mr-8">
+          <div className="items-center rounded-[5px] flex font-[500] text-white px-[15px] py-[10px] transition duration-300 hover:bg-[#222a3a] hover:cursor-pointer">
+            <img src="assets/images/bsc.svg" alt="Binance Smart Chain" className="h-7 w-7 pr-[10px]" />
+            Binance Smart Chain
           </div>
-          <div className="inputs">
-            <Input
-              placeholder="0"
-              value={tokenOneAmount}
-              onChange={changeAmount}
-              disabled={!prices}
-            />
-            <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
-            <div className="switchButton" onClick={switchTokens}>
-              <ArrowDownOutlined className="switchArrow" />
-            </div>
-            <div className="assetOne" onClick={() => openModal(1)}>
-              <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
-              {tokenOne.ticker}
-              <DownOutlined />
-            </div>
-            <div className="assetTwo" onClick={() => openModal(2)}>
-              <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
-              {tokenTwo.ticker}
-              <DownOutlined />
-            </div>
-          </div>
-          {(wallet && walletChainId == '56') ? (
-            <div className="swapButton" onClick={fetchDexSwap}>Swap</div>
+          {wallet && walletChainId === "56" ? (
+            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer">{shortenIfAddress(wallet)}</div>
           ) : (
-            <div className="swapButton" onClick={() => connect()}>Connect Wallet</div>  
+            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer" onClick={() => connect()}>Connect</div>
           )}
+          
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="tradeBox">
+            <div className="tradeBoxHeader py-5">
+              <h4 className="text-white">Swap</h4>
+              <Popover
+                content={settings}
+                title="Settings"
+                trigger="click"
+                placement="bottomRight"
+              >
+                <SettingOutlined className="cog" />
+              </Popover>
+            </div>
+            <div className="inputs">
+              <Input
+                placeholder="0"
+                value={tokenOneAmount}
+                onChange={changeAmount}
+                disabled={!prices}
+              />
+              <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
+              <div className="switchButton" onClick={switchTokens}>
+                <ArrowDownOutlined className="switchArrow" />
+              </div>
+              <div className="assetOne" onClick={() => openModal(1)}>
+                <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
+                {tokenOne.ticker}
+                <DownOutlined />
+              </div>
+              <div className="assetTwo" onClick={() => openModal(2)}>
+                <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
+                {tokenTwo.ticker}
+                <DownOutlined />
+              </div>
+            </div>
+            {(tokenOneAmount == 0 || !isConnected) ? (
+              <div className="swapButton disabled">Swap</div>
+            ) : (
+              <div className="swapButton" onClick={fetchDexSwap}>Swap</div>
+            )}
+          </div>
         </div>
       </div>
     </>
