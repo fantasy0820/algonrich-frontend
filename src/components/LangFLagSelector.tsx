@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { components } from 'react-select';
+// import { Select } from 'antd';
 const { SingleValue, Option } = components;
 
 const options = [
@@ -43,14 +44,14 @@ export default function LangFLagSelector({ change }: any) {
     <div className="custom-select-flg">
       <Select
         defaultValue={lang}
-        // value={lang}
+        value={lang}
         onChange={(e) => handleChange(e)}
         options={options}
         className="select-custom"
         formatOptionLabel={option => {
           let imgURL = "/assets/images/flags/" + option.value + ".png";
           return (
-            <div className='flex justify-around rounded-none bg-transparent'>
+            <div className='flex justify-around rounded-none'>
               {option.image ? <img src={imgURL} className="w-[20px] h-auto" /> : ''}
               <span>{option.label}</span>
             </div>

@@ -5,7 +5,7 @@ import LanguageSelector from "./LanguageSelector";
 import LangFlagSelector from "./LangFLagSelector";
 import { useTranslation } from "react-i18next";
 import type { MenuProps } from 'antd';
-import { Button, Dropdown } from 'antd';
+import { Button, Dropdown, ConfigProvider } from 'antd';
 
 export default function NavBar({ lngCh }: any) {
   const items: MenuProps['items'] = [
@@ -85,7 +85,7 @@ export default function NavBar({ lngCh }: any) {
               {/* <LanguageSelector change={changeLng} /> */}
               <LangFlagSelector change={changeLng} />
               <button
-                className="pl-[10px] text-gray-700 rounded-md cursor-pointer outline-none focus:border-gray-400 focus:border"
+                className="pl-[10px] pr-[10px] text-gray-700 rounded-md cursor-pointer outline-none focus:border-gray-400 focus:border"
                 onClick={() => setNavbar(!navbar)}
               >
                 {navbar ? (
@@ -122,90 +122,90 @@ export default function NavBar({ lngCh }: any) {
           </div>
         </div>
         {/* <div> */}
-          <div
-            className={`justify-self-center pb-3 mt-8 md:block md:flex md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
-              }`}
-          >
-            <ul className="items-center justify-center space-y-8 md:flex md:space-x-2 2xl:space-x-6 md:space-y-0 py-[30px] text-white font-chakrapetch uppercase font-bold">
-              <li className="">
-                <NavLink
-                  to={"/comingsoon"}
-                >
-                  <Trans i18nKey="tab_store">Store</Trans>
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  to={"/comingsoon"}
-                >
-                  <Trans i18nKey="tab_services">Services</Trans>
-                </NavLink>
-              </li>
-              <li className="md:hidden lg:block"
+        <div
+          className={`justify-self-center pb-3 mt-8 md:block md:flex md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
+            }`}
+        >
+          <ul className="items-center justify-center space-y-8 md:flex md:space-x-2 2xl:space-x-6 md:space-y-0 py-[30px] text-white font-chakrapetch uppercase font-bold">
+            <li className="">
+              <NavLink
+                to={"/comingsoon"}
               >
-                <NavLink 
-                  to={"/comingsoon"}
-                >
-                  <Trans i18nKey="tab_rewards">Rewards</Trans>
-                </NavLink>
-              </li>
-              <li>
-                <a
-                  href={'https://poocoin.app/tokens/0x2da63e26978b27ca854bdfe33f9866aa7c99813d'}
-                  target="_blank"
-                ><Trans i18nKey="tab_poocoin">PooCoin</Trans></a>
-              </li>
-              <li>
-                {
-                  (ready && i18n.language == 'es') ? (
-                    <a href="https://es.futurepaper.algonrich.com/"
-                      target="_blank"
-                    >
-                      <Trans i18nKey="tab_futurepaper">Future Paper</Trans>
-                    </a>
-                  ) : (
-                    <a href="https://futurepaper.algonrich.com/"
-                      target="_blank"
-                    >
-                      <Trans i18nKey="tab_futurepaper">Future Paper</Trans>
-                    </a>
-                  )
-                }
-              </li>
-              <li className="md:hidden lg:block">
-                <a className="md:hidden lg:block"
-                  href="https://bscscan.com/address/0x2da63e26978b27ca854bdfe33f9866aa7c99813d"
-                  target="_blank"
-                ><Trans i18nKey="tab_smartcontact">Smart Contract</Trans>
-                </a>
-              </li>
-              <li className="md:hidden lg:block">
-                <NavLink 
-                  to="/blog"
-                ><Trans i18nKey="tab_news">News</Trans></NavLink>
-              </li>
-              <li className="md:hidden lg:block">
-                <NavLink
-                  to="/contactus"
-                >
-                  <Trans i18nKey="tab_contactus">Contact US</Trans>
-                </NavLink>
-              </li>
-            </ul>
-
-            <div className="my-3 mx-auto lg:mt-3 space-y-2 md:hidden lg:hidden">
-              <a href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
-                target={"_blank"}
-                className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-              >
-                <Trans i18nKey="btn_buyalgo"> buy algo</Trans>
-              </a>
-              <NavLink to="/swap"
-                className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-              ><Trans i18nKey="btn_swap">Swap</Trans>
+                <Trans i18nKey="tab_store">Store</Trans>
               </NavLink>
-            </div>
+            </li>
+            <li>
+              <NavLink
+                to={"/comingsoon"}
+              >
+                <Trans i18nKey="tab_services">Services</Trans>
+              </NavLink>
+            </li>
+            <li className="md:hidden lg:block"
+            >
+              <NavLink
+                to={"/comingsoon"}
+              >
+                <Trans i18nKey="tab_rewards">Rewards</Trans>
+              </NavLink>
+            </li>
+            <li>
+              <a
+                href={'https://poocoin.app/tokens/0x2da63e26978b27ca854bdfe33f9866aa7c99813d'}
+                target="_blank"
+              ><Trans i18nKey="tab_poocoin">PooCoin</Trans></a>
+            </li>
+            <li>
+              {
+                (ready && i18n.language == 'es') ? (
+                  <a href="https://es.futurepaper.algonrich.com/"
+                    target="_blank"
+                  >
+                    <Trans i18nKey="tab_futurepaper">Future Paper</Trans>
+                  </a>
+                ) : (
+                  <a href="https://futurepaper.algonrich.com/"
+                    target="_blank"
+                  >
+                    <Trans i18nKey="tab_futurepaper">Future Paper</Trans>
+                  </a>
+                )
+              }
+            </li>
+            <li className="md:hidden lg:block">
+              <a className="md:hidden lg:block"
+                href="https://bscscan.com/address/0x2da63e26978b27ca854bdfe33f9866aa7c99813d"
+                target="_blank"
+              ><Trans i18nKey="tab_smartcontact">Smart Contract</Trans>
+              </a>
+            </li>
+            <li className="md:hidden lg:block">
+              <NavLink
+                to="/blog"
+              ><Trans i18nKey="tab_news">News</Trans></NavLink>
+            </li>
+            <li className="md:hidden lg:block">
+              <NavLink
+                to="/contactus"
+              >
+                <Trans i18nKey="tab_contactus">Contact US</Trans>
+              </NavLink>
+            </li>
+          </ul>
+
+          <div className="my-3 mx-auto lg:mt-3 space-y-2 md:hidden lg:hidden">
+            <a href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
+              target={"_blank"}
+              className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
+            >
+              <Trans i18nKey="btn_buyalgo"> buy algo</Trans>
+            </a>
+            <NavLink to="/swap"
+              className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
+            ><Trans i18nKey="btn_swap">Swap</Trans>
+            </NavLink>
           </div>
+        </div>
         {/* </div> */}
         <div className="hidden lg:flex md:flex space-x-2">
           <a href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
@@ -219,28 +219,36 @@ export default function NavBar({ lngCh }: any) {
           </NavLink>
         </div>
         <div className="lg:hidden flex-initial hidden md:inline-block">
-
-          <Dropdown menu={{ items }} placement="bottomRight">
-            {/* <Button>bottomRight</Button> */}
-            <button
-              className="pl-[10px] text-gray-700 rounded-md cursor-pointer outline-none focus:border-gray-400 focus:border"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-6 h-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
+          <ConfigProvider
+            theme={{
+                token: {
+                  colorBgBase: '#141a31',
+                  colorTextBase: '#fff'
+                },
+            }}
+          >
+            <Dropdown menu={{ items }} placement="bottomCenter">
+              {/* <Button>bottomRight</Button> */}
+              <button
+                className="text-gray-700 rounded-md cursor-pointer outline-none focus:border-gray-400 focus:border"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            </button>
-          </Dropdown>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </Dropdown>
+          </ConfigProvider>
         </div>
 
 

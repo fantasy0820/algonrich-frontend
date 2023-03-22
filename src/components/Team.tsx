@@ -25,10 +25,10 @@ export default function Team({ data, perview, nav }: any) {
           return (
             <SwiperSlide key={ind} className="flex justify-center">
                 <div className='team-member max-w-[300px] relative'>
-                  <img src={`${item.url}`} className="w-[250px] h-[250px] object-cover object-top bg-no-repeat m-auto" alt={item.name} />
-                  <div className='name min-w-[250px] m-auto px-[16px] pt-[20px]'>
+                  <img src={`${item.url}`} className="w-[270px] h-[250px] object-cover object-top bg-no-repeat m-auto" alt={item.name} />
+                  <div className='name min-w-[270px] m-auto px-[16px] pt-[20px]'>
                     <h5 className='name text-[20px] text-white font-chakrapetch uppercase text-start font-bold hover:text-[#3d4db5] cursor-pointer'><Trans i18nKey={"name_" + ind}>{item.name}</Trans></h5>
-                    <p className='role text-[16px] capitalize mb-[14px] text-start'
+                    <p className='role text-[12px] capitalize mb-[14px] text-start'
                     ><Trans i18nKey={"role_" + ind}>{item.role}</Trans></p>
                   </div>
                   <div className="absolute right-0 bottom-0">

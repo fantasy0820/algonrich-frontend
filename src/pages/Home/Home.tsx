@@ -198,7 +198,7 @@ export default function Home() {
               data-aos-delay="50"
               data-aos-anchor-placement="center-bottom"
             >
-              <Team data={TeamAvatar} perview={windowWidth <= 768 ? 1 : (windowWidth < 1524 ? 2 : 3)} nav={{
+              <Team data={TeamAvatar} perview={windowWidth <= 1116 ? 1 : (windowWidth < 1652 ? 2 : 3)} nav={{
                 prevEl,
                 nextEl,
               }} />
