@@ -59,6 +59,10 @@ $primary-hover-color: #3d4db5;
   }
 }
 
+.ql-container.ql-snow {
+  min-height: 400px !important;
+}
+
 .ant-upload-wrapper .ant-upload-drag p.ant-upload-drag-icon .anticon  {
   color: #ff06b7;
 }
@@ -70,5 +74,19 @@ $primary-hover-color: #3d4db5;
   
   .ant-upload-hint {
     color: white!important;
+  }
+}
+
+.ant-upload-list-item {
+  .ant-upload-icon span svg {
+    fill: white;
+  }
+
+  span {
+    color: white;
+    
+    button span svg {
+      fill: white;
+    }
   }
 }

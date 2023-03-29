@@ -30,7 +30,7 @@ function App() {
           <Route path="/contactus" element={<ContactUS />} />
           <Route path="/swap" element={<Swap />} />
           <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/detail" element={<BlogDetail />} />
+          <Route path="/blog/detail/:id" element={<BlogDetail />} />
           <Route path="/new_post" element={<NewPost />} />
         </Routes>
         <Footer />

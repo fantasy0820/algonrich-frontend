@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSnackbar } from 'notistack';
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,8 +11,8 @@ import type { UploadProps } from 'antd';
 import { message, Upload } from 'antd';
 import { LoadingButton } from '@mui/lab';
 import ReactQuill from 'react-quill';
+import axios from "axios";
 import 'react-quill/dist/quill.snow.css';
-
 
 // import MUIRichTextEditor from "mui-rte";
 
@@ -58,41 +58,24 @@ const CssMyEditor =styled(ReactQuill) ( {
 
 const NewBlogSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
-  description: Yup.string().required('Description is required'),
-  content: Yup.string().min(1000).required('Content is required'),
-  cover: Yup.mixed().required('Cover is required'),
+  // description: Yup.string().required('Description is required'),
+  // content: Yup.string().required('Content is required'),
+  // cover: Yup.mixed().required('Cover is required'),
 });
 
 
 const defaultValues = {
   title: '',
-  description: '',
+  // description: '',
   content: '',
   cover: null,
-  tags: ['Logan'],
+  tags: ['Blockchain'],
   publish: true,
   comments: true,
   metaTitle: '',
   metaDescription: '',
-  metaKeywords: ['Logan'],
+  metaKeywords: ['Blockchain'],
 };
-
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
-];
 
 const modules = {
   toolbar: [
@@ -113,31 +96,18 @@ const formats = [
 
 const { Dragger } = Upload;
 
-const props: UploadProps = {
-  name: 'file',
-  multiple: true,
-  action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log('Dropped files', e.dataTransfer.files);
-  },
-};
+interface TagType {
+  id: number;
+  name: string
+}
 
 const ContactForm = () => {
-
   const [quilValue, setQuilValue] = useState('');
+  const [cover, setCover] = useState('');
   const [open, setOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [tagsOption, setTagsOption] = useState<Array<TagType>>([]);
+  const [isGetTags, setIsGetTags] = useState(false);
 
   const handleClosePreview = () => {
     setOpen(false);
@@ -150,6 +120,7 @@ const ContactForm = () => {
     resolver: yupResolver(NewBlogSchema),
     defaultValues,
   });
+
   const {
     reset,
     watch,
@@ -159,17 +130,62 @@ const ContactForm = () => {
     formState: { isSubmitting, isValid },
   } = methods;
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: any) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/blog`, {
+        title: data.title,
+        bannerImg: cover,
+        content: quilValue,
+        userId: 2
+      });
+
+      if(response.data.id > 0) {
+        message.success("Blog is successfully posted!");
+      }
+
       reset();
-      handleClosePreview();
-      enqueueSnackbar('Post success!');
-      // navigate(PATH_DASHBOARD.blog.posts);
+      setQuilValue("");
+      setCover("");
     } catch (error) {
       console.error(error);
     }
   };
+
+  const getTagsList = async () => {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/tag`, {
+      headers: {
+        accept: 'application/json'
+      }
+    });
+
+    setTagsOption(response.data);
+    setIsGetTags(true);
+  };
+
+  const props: UploadProps = {
+    name: 'file',
+    multiple: true,
+    action: process.env.REACT_APP_API_URL + '/file-service/upload',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+        setCover(info.file.response.imageUrl);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
+  useEffect(() => {
+    getTagsList();
+  }, [isGetTags]);
 
   return (
     <div className="new-post justify-between mx-auto w-[95%] lg:w-[90%] py-[150px]">
@@ -187,7 +203,7 @@ const ContactForm = () => {
                 <Stack spacing={3}>
                   <RHFTextField name="title" label="Post Title" />
                   {/* <CssTextField name="postTitle" value={''} label="Post Title" onChange={setPostTitle} /> */}
-                  <RHFTextField name="description" label="Description" multiline rows={3} />
+                  {/* <RHFTextField name="description" label="Description" multiline rows={3} /> */}
                   <div>
                     <p className="content-title">Content</p>
                     <ReactQuill
@@ -239,7 +255,7 @@ const ContactForm = () => {
                         multiple
                         freeSolo
                         onChange={(event, newValue) => field.onChange(newValue)}
-                        options={TAGS_OPTION.map((option) => option)}
+                        options={tagsOption.map((option => option.name))}
                         renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
                             <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
@@ -260,7 +276,7 @@ const ContactForm = () => {
                         multiple
                         freeSolo
                         onChange={(event, newValue) => field.onChange(newValue)}
-                        options={TAGS_OPTION.map((option) => option)}
+                        options={tagsOption.map((option) => option.name)}
                         renderTags={(value, getTagProps) =>
                           value.map((option, index) => (
                             <Chip {...getTagProps({ index })} key={option} size="small" label={option} />
