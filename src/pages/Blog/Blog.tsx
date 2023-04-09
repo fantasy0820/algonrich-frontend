@@ -9,6 +9,7 @@ import {
   icon,
 } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
 import ReactPaginate from "react-paginate";
+import AdminOnly from "components/AdminOnly";
 import "./Blog.scss";
 
 const BlogItem: React.FC<{
@@ -20,13 +21,13 @@ const BlogItem: React.FC<{
 }> = ({ blogContent, imgSrc, created, author, blogId }) => {
   const formatDate = (dateString: string): string => {
     const date = new Date(Date.parse(dateString));
-    return date.toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
+    return date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     });
-  }
-  
+  };
+
   return (
     <div className="w-full bg-[#131740] relative px-[20px] py-[20px] rounded-[4px]">
       <div className="float-left w-[100%] lg:w-[40%] relative">
@@ -47,7 +48,10 @@ const BlogItem: React.FC<{
           </span>
         </div>
         <div className="clear-both"></div>
-        <Link className="text-[#fff] hover:text-[#ff06b7]" to={`/blog/detail/${blogId}`}>
+        <Link
+          className="text-[#fff] hover:text-[#ff06b7]"
+          to={`/blog/detail/${blogId}`}
+        >
           <h4 className="text-[22px] text-left transition duration-400">
             {blogContent}
           </h4>
@@ -67,10 +71,10 @@ const Blog = () => {
 
   const getBlogList = async () => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/blog`);
-    
+
     setBlogData(response.data);
     setGetBlogs(true);
-  }
+  };
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected);
@@ -85,14 +89,16 @@ const Blog = () => {
       {/* <div className="h-[50px]"> */}
       {/* </div> */}
       <div className="justify-between mx-auto w-[95%] lg:w-[90%] py-[124px]">
-        <div className="w-[100%] rounded-[5px] h-[60px] py-[0px]">
-          <Link
-            to="/new_post"
-            className="bg-[#ff06b7] text-white float-right text-right px-[20px] py-[10px] rounded-lg"
-          >
-            New Post
-          </Link>
-        </div>
+        <AdminOnly>
+          <div className="w-[100%] rounded-[5px] h-[60px] py-[0px]">
+            <Link
+              to="/new_post"
+              className="bg-[#ff06b7] text-white float-right text-right px-[20px] py-[10px] rounded-lg"
+            >
+              New Post
+            </Link>
+          </div>
+        </AdminOnly>
 
         <div className="w-[100%] rounded-[5px] h-auto py-[130px] px-[50px] pageheader">
           <p className="text-[42px] leading-[50px] font-nunito text-left font-bold font-josefin text-[#fff]">
@@ -100,33 +106,42 @@ const Blog = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[30px] mt-[50px]">
-          {blogData.map((item: any, index: number) => {
-            if (index >= 10 * currentPage && index < 10 * (currentPage + 1)) {
-              return (
-                <BlogItem
-                  key={index}
-                  blogContent={item.title}
-                  imgSrc={item.bannerImg}
-                  created={item.created_at}
-                  author={item.user.name}
-                  blogId={item.id}
-                />
-              );
-            }
-          })}
-        </div>
-        <ReactPaginate
-          previousLabel={"Prev"}
-          nextLabel={"Next"}
-          pageCount={Math.ceil(blogData.length / 6)}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          previousLinkClassName={"pagination__link"}
-          nextLinkClassName={"pagination__link"}
-          disabledClassName={"pagination__link--disabled"}
-          activeClassName={"pagination__link--active"}
-        />
+        {blogData.length == 0 ? (
+          <div className="mt-[120px] font-[30px]">No results!</div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-[30px] mt-[50px]">
+              {blogData.map((item: any, index: number) => {
+                if (
+                  index >= 10 * currentPage &&
+                  index < 10 * (currentPage + 1)
+                ) {
+                  return (
+                    <BlogItem
+                      key={index}
+                      blogContent={item.title}
+                      imgSrc={item.bannerImg}
+                      created={item.created_at}
+                      author={item.user.name}
+                      blogId={item.id}
+                    />
+                  );
+                }
+              })}
+            </div>
+            <ReactPaginate
+              previousLabel={"Prev"}
+              nextLabel={"Next"}
+              pageCount={Math.ceil(blogData.length / 6)}
+              onPageChange={handlePageClick}
+              containerClassName={"pagination"}
+              previousLinkClassName={"pagination__link"}
+              nextLinkClassName={"pagination__link"}
+              disabledClassName={"pagination__link--disabled"}
+              activeClassName={"pagination__link--active"}
+            />
+          </>
+        )}
       </div>
     </>
   );
