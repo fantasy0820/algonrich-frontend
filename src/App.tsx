@@ -16,6 +16,7 @@ import Blog from "pages/Blog/Blog";
 import BlogDetail from "pages/Blog/Detail";
 import NewPost from "pages/NewPost";
 import Login from "pages/Auth/Login";
+import Logout from "pages/Auth/Logout";
 
 function App() {
   const { t, i18n, ready } = useTranslation();
@@ -36,6 +37,7 @@ function App() {
             <Route path="/blog/detail/:id" element={<BlogDetail />} />
             <Route path="/new_post" element={<NewPost />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/logout" element={<Logout />} />
           </Routes>
           <Footer />
           <ScrollTopBtn />

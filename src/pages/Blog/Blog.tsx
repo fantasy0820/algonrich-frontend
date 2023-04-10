@@ -10,6 +10,9 @@ import {
 } from "@fortawesome/fontawesome-svg-core/import.macro"; // <-- import styles to be used
 import ReactPaginate from "react-paginate";
 import AdminOnly from "components/AdminOnly";
+import { Modal } from "antd";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 import "./Blog.scss";
 
 const BlogItem: React.FC<{
@@ -18,7 +21,10 @@ const BlogItem: React.FC<{
   created: string;
   author: string;
   blogId: number;
-}> = ({ blogContent, imgSrc, created, author, blogId }) => {
+  removed: any;
+}> = ({ blogContent, imgSrc, created, author, blogId, removed }) => {
+  const [isVisible, setVisible] = useState(false);
+
   const formatDate = (dateString: string): string => {
     const date = new Date(Date.parse(dateString));
     return date.toLocaleDateString("en-GB", {
@@ -26,6 +32,13 @@ const BlogItem: React.FC<{
       month: "short",
       year: "numeric",
     });
+  };
+
+  const removeBlog = async (blogId: number) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/blog/${blogId}`);
+
+    toastr.success("Successfully removed!");
+    removed();
   };
 
   return (
@@ -46,6 +59,52 @@ const BlogItem: React.FC<{
             />
             {author}
           </span>
+          <AdminOnly>
+            <span
+              className="text-[16px] text-[#ddd] font-[400] pr-[10px] cursor-pointer hover:text-[#ff06b7]"
+              onClick={() => {
+                setVisible(true);
+              }}
+            >
+              <FontAwesomeIcon
+                className="text-[#ff06b7] mr-[5px]"
+                icon={solid("trash")}
+              />
+              Remove
+            </span>
+            <Modal
+              open={isVisible}
+              className="modal pb-0"
+              footer={
+                <div className="flex justify-end bg-[#131740] py-2 px-2 rounded-b-[7px]">
+                  <button
+                    className="bg-[#ff06b7] hover:opacity-80 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      removeBlog(blogId);
+                      setVisible(false);
+                    }}
+                  >
+                    OK
+                  </button>
+                  <button
+                    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
+                    onClick={() => {
+                      setVisible(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              }
+            >
+              <div className="modal-header bg-[#ff06b7] text-white p-4 rounded-t-[7px]">
+                <h2>Confirm Removal</h2>
+              </div>
+              <div className="modal-body p-4 bg-[#131740]">
+                <p>Are you sure you want to remove this blog?</p>
+              </div>
+            </Modal>
+          </AdminOnly>
         </div>
         <div className="clear-both"></div>
         <Link
@@ -124,6 +183,7 @@ const Blog = () => {
                       created={item.created_at}
                       author={item.user.name}
                       blogId={item.id}
+                      removed={() => getBlogList()}
                     />
                   );
                 }

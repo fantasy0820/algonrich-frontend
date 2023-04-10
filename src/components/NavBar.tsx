@@ -6,10 +6,8 @@ import LangFlagSelector from "./LangFLagSelector";
 import { useTranslation } from "react-i18next";
 import type { MenuProps } from "antd";
 import { Button, Dropdown, ConfigProvider } from "antd";
-import { useAuth } from "context/AuthContext";
 
 export default function NavBar({ lngCh }: any) {
-  const { token, logout } = useAuth();
   const items: MenuProps["items"] = [
     {
       key: "1",
@@ -194,21 +192,6 @@ export default function NavBar({ lngCh }: any) {
             >
               <Trans i18nKey="btn_swap">Swap</Trans>
             </NavLink>
-            {!token ? (
-              <NavLink
-                to="/login"
-                className="flex items-center justify-center w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-              >
-                <Trans i18nKey="btn_login">Login</Trans>
-              </NavLink>
-            ) : (
-              <button
-                className="flex items-center justify-center w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-                onClick={logout}
-              >
-                <Trans i18nKey="btn_logout">Logout</Trans>
-              </button>
-            )}
           </div>
         </div>
         {/* </div> */}
@@ -226,21 +209,6 @@ export default function NavBar({ lngCh }: any) {
           >
             <Trans i18nKey="btn_swap">Swap</Trans>
           </NavLink>
-          {!token ? (
-            <NavLink
-              to="/login"
-              className="flex items-center justify-center w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-            >
-              <Trans i18nKey="btn_login">Login</Trans>
-            </NavLink>
-          ) : (
-            <button
-              className="flex items-center justify-center w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
-              onClick={logout}
-            >
-              <Trans i18nKey="btn_logout">Logout</Trans>
-            </button>
-          )}
         </div>
         <div className="lg:hidden flex-initial hidden md:inline-block">
           <ConfigProvider
