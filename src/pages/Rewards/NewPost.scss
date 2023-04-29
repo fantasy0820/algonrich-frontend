@@ -1,0 +1,128 @@
+$primary-hover-color: #3d4db5;
+
+.new-post {
+  // display: flex;
+  justify-content: center;
+
+  .title {
+    color: white;
+    font-size: 32px;
+    text-align: left;
+    padding-bottom: 20px;
+  }
+
+  .post-block {
+    .post-card {
+      color: white;
+      background-color: #131740;
+    }
+  }
+
+  p.content-title {
+    text-align: left;
+  }
+
+  .other-info {
+    .publish-switch {
+      background-color: #131740;
+
+      .publish-title {
+        text-align: left;
+        color: white;
+      }
+
+      .Comments-title {
+        text-align: left;
+        color: white;
+      }
+    }
+  }
+}
+
+.toast-setting {
+  border: 1px solid $primary-hover-color;
+  background: #3d4db5;
+  color: white;
+}
+
+.ql-toolbar .ql-format span {
+  color: white !important;
+
+  select {
+    color: white;
+  }
+
+  .ql-picker.ql-expanded {
+    background-color: #131740;
+  }
+}
+
+.ql-container.ql-snow {
+  min-height: 400px !important;
+}
+
+.ant-upload-wrapper .ant-upload-drag p.ant-upload-drag-icon .anticon {
+  color: #ff06b7;
+}
+
+.ant-upload-wrapper .ant-upload-drag {
+  p.ant-upload-text {
+    color: white !important;
+  }
+
+  .ant-upload-hint {
+    color: white !important;
+  }
+}
+
+.ant-upload-list-item {
+  .ant-upload-icon span svg {
+    fill: white;
+  }
+
+  span {
+    color: white;
+
+    button span svg {
+      fill: white;
+    }
+  }
+}
+
+.react-datepicker__input-container {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  color: white;
+  box-sizing: border-box;
+  display: inline-flex !important;
+  -webkit-box-align: center;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  border-radius: 4px;
+
+  input {
+    color: white !important;
+    font: inherit;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375rem;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 100%;
+    animation-name: mui-auto-fill-cancel;
+    animation-duration: 10ms;
+    padding: 16.5px 14px;
+  }
+
+  input::placeholder {
+    color: white;
+  }
+}

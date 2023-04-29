@@ -1,10 +1,10 @@
-.blog-item-date {
+.reward-item-date {
   position: absolute;
-  top: 40%;
+  top: 20%;
   background: #ff06b7;
-  width: 100px;
+  width: 300px;
   height: 30px;
-  left: -10px;
+  left: 50px;
   text-align: center;
   padding: 3px 5px;
 
@@ -21,7 +21,7 @@
   }
 }
 
-.blog-btn {
+.reward-btn {
   float: left;
   color: #fff;
   font-size: 16px;
@@ -35,7 +35,7 @@
   }
 }
 
-.blog-single-tags {
+.reward-single-tags {
   .tag-list a {
     padding: 7px 14px;
     border: 1px solid #ff06b7;
@@ -102,7 +102,7 @@
 }
 
 .pageheader {
-  background: url("../../assets/bread-bg1.jpg");
+  background: url("../../assets/rewards_back.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -111,7 +111,7 @@
   margin-top: 0px !important;
 }
 
-.blog-detail a {
+.reward-detail a {
   color: #ff06b7 !important;
   text-decoration: underline !important;
   cursor: pointer !important;

@@ -15,6 +15,8 @@ import { ToastContainer, toast } from "react-toastify";
 import Blog from "pages/Blog/Blog";
 import BlogDetail from "pages/Blog/Detail";
 import NewPost from "pages/NewPost";
+import Rewards from "pages/Rewards/Rewards";
+import NewRewards from "pages/Rewards/New";
 import Login from "pages/Auth/Login";
 import Logout from "pages/Auth/Logout";
 
@@ -31,6 +33,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/comingsoon" element={<ComingSoon />} />
+            <Route path="/rewards" element={<Rewards />} />
+            <Route path="/new_reward" element={<NewRewards />} />
             <Route path="/contactus" element={<ContactUS />} />
             <Route path="/swap" element={<Swap />} />
             <Route path="/blog" element={<Blog />} />

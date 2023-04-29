@@ -139,7 +139,7 @@ const BlogDetail = () => {
                   16
                 </span> */}
               </div>
-              <div className="leading-7 transition duration-400 text-[16px] font-normal mb-[15px]" dangerouslySetInnerHTML={{ __html: blogData.content }}></div>
+              <div className="leading-7 transition duration-400 text-[16px] font-normal mb-[15px] blog-detail" dangerouslySetInnerHTML={{ __html: blogData.content }}></div>
             </div>
 
             <div className="pb-[10px] text-left blog-single-tags">
