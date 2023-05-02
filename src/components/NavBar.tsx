@@ -23,7 +23,7 @@ export default function NavBar({ lngCh }: any) {
     {
       key: "2",
       label: (
-        <NavLink to={"/rewards"}>
+        <NavLink to={"/rewards/list"}>
           <Trans i18nKey="tab_rewards">Rewards</Trans>
         </NavLink>
       ),
@@ -132,7 +132,7 @@ export default function NavBar({ lngCh }: any) {
               </NavLink>
             </li>
             <li className="md:hidden lg:block">
-              <NavLink to={"/rewards"}>
+              <NavLink to={"/rewards/list"}>
                 <Trans i18nKey="tab_rewards">Rewards</Trans>
               </NavLink>
             </li>

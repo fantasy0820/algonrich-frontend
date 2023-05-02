@@ -17,6 +17,7 @@ import BlogDetail from "pages/Blog/Detail";
 import NewPost from "pages/NewPost";
 import Rewards from "pages/Rewards/Rewards";
 import NewRewards from "pages/Rewards/New";
+import RewardsList from "pages/Rewards/List";
 import Login from "pages/Auth/Login";
 import Logout from "pages/Auth/Logout";
 
@@ -33,8 +34,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/comingsoon" element={<ComingSoon />} />
-            <Route path="/rewards" element={<Rewards />} />
+            <Route path="/rewards/:id" element={<Rewards />} />
             <Route path="/new_reward" element={<NewRewards />} />
+            <Route path="/rewards/list" element={<RewardsList />} />
             <Route path="/contactus" element={<ContactUS />} />
             <Route path="/swap" element={<Swap />} />
             <Route path="/blog" element={<Blog />} />

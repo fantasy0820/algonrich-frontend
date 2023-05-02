@@ -22,6 +22,7 @@ interface RewardType {
 }
 
 const Rewards = () => {
+  const { id } = useParams();
   const [rewardData, setRewardData] = useState<RewardType>({
     id: 0,
     bannerImg: "",
@@ -36,17 +37,19 @@ const Rewards = () => {
   const [isGet, setGetReward] = useState(false);
 
   const getReward = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/reward`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/reward/${id}`
+    );
 
     let reward = {
-      id: response.data[0].id,
-      bannerImg: response.data[0].bannerImg,
-      createdAt: response.data[0].created_at,
-      content: response.data[0].content,
-      title: response.data[0].title,
-      start: response.data[0].start,
-      end: response.data[0].end,
-      price: response.data[0].price,
+      id: response.data.id,
+      bannerImg: response.data.bannerImg,
+      createdAt: response.data.created_at,
+      content: response.data.content,
+      title: response.data.title,
+      start: response.data.start,
+      end: response.data.end,
+      price: response.data.price,
     };
 
     setRewardData(reward);
@@ -73,7 +76,7 @@ const Rewards = () => {
 
   return (
     <div className="justify-between mx-auto w-[95%] lg:w-[90%] py-[150px]">
-      <div className="w-[100%] rounded-[5px] h-auto py-[130px] px-[50px] pageheader">
+      <div className="w-[100%] rounded-[5px] h-auto py-[130px] px-[50px] reward-pageheader">
         <p className="text-[42px] text-[#fff] leading-[50px] font-nunito text-left font-bold font-josefin">
           {rewardData.title}
         </p>
