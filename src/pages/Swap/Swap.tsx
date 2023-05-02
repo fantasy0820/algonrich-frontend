@@ -10,8 +10,15 @@ import tokenList from "utils/tokenList.json";
 import { shortenIfAddress } from "utils/address";
 // import { Trans } from "react-i18next";
 import "./Swap.scss";
-import { useConnect, useDisconnect, useNetwork, useAccount, useSendTransaction, useWaitForTransaction } from "wagmi";
-import { switchNetwork } from '@wagmi/core';
+import {
+  useConnect,
+  useDisconnect,
+  useNetwork,
+  useAccount,
+  useSendTransaction,
+  useWaitForTransaction,
+} from "wagmi";
+import { switchNetwork } from "@wagmi/core";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils.js";
@@ -27,16 +34,18 @@ export default function Swap() {
   const [slippage, setSlippage] = useState(2.5);
   const [tokenOneAmount, setTokenOneAmount] = useState(0);
   const [tokenTwoAmount, setTokenTwoAmount] = useState(0);
-  const [tokenOneBalance, setTokenOneBalance] = useState("0.0")
-  const [tokenTwoBalance, setTokenTwoBalance] = useState("0.0")
+  const [tokenOneBalance, setTokenOneBalance] = useState("0.0");
+  const [tokenTwoBalance, setTokenTwoBalance] = useState("0.0");
   const [tokenOne, setTokenOne] = useState(tokenList[0]);
   const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
+  const [tokenOneUsd, setTokenOneUsd] = useState(0);
+  const [tokenTwoUsd, setTokenTwoUsd] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [changeToken, setChangeToken] = useState(1);
   const [prices, setPrices] = useState<DexPrices>({
     tokenOne: 0,
     tokenTwo: 0,
-    ratio: 1
+    ratio: 1,
   });
   const [txDetails, setTxDetails] = useState({
     to: null,
@@ -51,14 +60,14 @@ export default function Swap() {
   const { disconnect } = useDisconnect();
   const { chain } = useNetwork();
 
-  const {data, sendTransaction} = useSendTransaction({
+  const { data, sendTransaction } = useSendTransaction({
     mode: "recklesslyUnprepared",
     request: {
       from: address,
       to: String(txDetails.to),
       data: String(txDetails.data),
       value: String(txDetails.value),
-    }
+    },
   });
 
   const { isLoading, isSuccess } = useWaitForTransaction({
@@ -67,20 +76,25 @@ export default function Swap() {
 
   const changeAmount = (e: any) => {
     setTokenOneAmount(e.target.value);
+    setTokenOneUsd(Number((e.target.value * prices.tokenOne).toFixed(2)));
 
-    if(e.target.value && prices) {
+    if (e.target.value && prices) {
       setTokenTwoAmount(Number((e.target.value * prices.ratio).toFixed(2)));
+      setTokenTwoUsd(
+        Number((e.target.value * prices.ratio * prices.tokenTwo).toFixed(2))
+      );
     } else {
       setTokenTwoAmount(0);
+      setTokenTwoUsd(0);
     }
-  }
+  };
 
   useEffect(() => {
     const handleSwitchNetwork = async () => {
-      if(isConnected && chain?.id !== 56) {
+      if (isConnected && chain?.id !== 56) {
         await switchNetwork({
-          chainId: 56
-        })
+          chainId: 56,
+        });
       }
 
       // if (isConnected) {
@@ -95,12 +109,12 @@ export default function Swap() {
       // if (localStorage.getItem("chainId") !== null) {
       //   setChainId(String(localStorage.getItem("chainId")));
       // }
-    }
+    };
 
     // if(!isConnected) {
     //   localStorage.clear();
     // }
-    
+
     handleSwitchNetwork();
   }, [isConnected]);
 
@@ -121,16 +135,18 @@ export default function Swap() {
     setPrices({
       tokenOne: 0,
       tokenTwo: 0,
-      ratio: 1
+      ratio: 1,
     });
     setTokenOneAmount(0);
+    setTokenOneUsd(0);
     setTokenTwoAmount(0);
+    setTokenTwoUsd(0);
     if (changeToken === 1) {
       setTokenOne(tokenList[i]);
-      fetchPrices(tokenList[i].address, tokenTwo.address)
+      fetchPrices(tokenList[i].address, tokenTwo.address);
     } else {
       setTokenTwo(tokenList[i]);
-      fetchPrices(tokenOne.address, tokenList[i].address)
+      fetchPrices(tokenOne.address, tokenList[i].address);
     }
     setIsOpen(false);
   }
@@ -139,10 +155,12 @@ export default function Swap() {
     setPrices({
       tokenOne: 0,
       tokenTwo: 0,
-      ratio: 1
+      ratio: 1,
     });
     setTokenOneAmount(0);
+    setTokenOneUsd(0);
     setTokenTwoAmount(0);
+    setTokenTwoUsd(0);
     const one = tokenOne;
     const two = tokenTwo;
     setTokenOne(two);
@@ -156,142 +174,163 @@ export default function Swap() {
    * @param two address for tokenTwo
    */
   async function fetchPrices(one: string, two: string) {
-    setTokenOneBalance("0.0")
-    setTokenTwoBalance("0.0")
+    setTokenOneBalance("0.0");
+    setTokenTwoBalance("0.0");
 
     const urlOne = `https://deep-index.moralis.io/api/v2/erc20/${one}/price?chain=bsc&exchange=pancakeswap-v2`;
     const urlTwo = `https://deep-index.moralis.io/api/v2/erc20/${two}/price?chain=bsc&exchange=pancakeswap-v2`;
     const responseOne = await axios.get(urlOne, {
       headers: {
-        accept: 'application/json',
-        'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
-      }
+        accept: "application/json",
+        "X-API-Key": process.env.REACT_APP_MORALIS_KEY,
+      },
     });
 
     const responseTwo = await axios.get(urlTwo, {
       headers: {
-        accept: 'application/json',
-        'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
-      }
+        accept: "application/json",
+        "X-API-Key": process.env.REACT_APP_MORALIS_KEY,
+      },
     });
 
     setPrices({
       tokenOne: responseOne.data.usdPrice,
       tokenTwo: responseTwo.data.usdPrice,
-      ratio: responseOne.data.usdPrice/responseTwo.data.usdPrice
+      ratio: responseOne.data.usdPrice / responseTwo.data.usdPrice,
     });
 
-    if(isConnected) {
+    if (isConnected) {
       const url = `https://deep-index.moralis.io/api/v2/${address}/erc20`;
 
       const balanceOne = await axios.get(url, {
         headers: {
-          accept: 'application/json',
-          'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+          accept: "application/json",
+          "X-API-Key": process.env.REACT_APP_MORALIS_KEY,
         },
         params: {
-          "chain": "bsc",
-          "token_addresses": one,
-        }
-      })
+          chain: "bsc",
+          token_addresses: one,
+        },
+      });
 
       const balanceTwo = await axios.get(url, {
         headers: {
-          accept: 'application/json',
-          'X-API-Key': process.env.REACT_APP_MORALIS_KEY,
+          accept: "application/json",
+          "X-API-Key": process.env.REACT_APP_MORALIS_KEY,
         },
         params: {
-          "chain": "bsc",
-          "token_addresses": two,
-        }
-      })
+          chain: "bsc",
+          token_addresses: two,
+        },
+      });
 
-      const formattedBalanceOne = balanceOne.data[0] ? Number(ethers.utils.formatEther(balanceOne.data[0]?.balance)).toFixed(5) : "0.0";
-      const formattedBalanceTwo = balanceTwo.data[0] ? Number(ethers.utils.formatEther(balanceTwo.data[0]?.balance)).toFixed(5) : "0.0";
-      setTokenOneBalance(formattedBalanceOne)
-      setTokenTwoBalance(formattedBalanceTwo)
+      const formattedBalanceOne = balanceOne.data[0]
+        ? Number(ethers.utils.formatEther(balanceOne.data[0]?.balance)).toFixed(
+            5
+          )
+        : "0.0";
+      const formattedBalanceTwo = balanceTwo.data[0]
+        ? Number(ethers.utils.formatEther(balanceTwo.data[0]?.balance)).toFixed(
+            5
+          )
+        : "0.0";
+      setTokenOneBalance(formattedBalanceOne);
+      setTokenTwoBalance(formattedBalanceTwo);
     }
   }
 
-  async function fetchDexSwap(){
-    console.log(address)
-    const allowance = await axios.get(`https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`)
-    if(allowance.data.allowance === "0"){
-      const approve = await axios.get(`https://api.1inch.io/v5.0/56/approve/transaction?tokenAddress=${tokenOne.address}`)
-      
+  async function fetchDexSwap() {
+    console.log(address);
+    const allowance = await axios.get(
+      `https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
+    );
+    if (allowance.data.allowance === "0") {
+      const approve = await axios.get(
+        `https://api.1inch.io/v5.0/56/approve/transaction?tokenAddress=${tokenOne.address}`
+      );
+
       setTxDetails(approve.data);
-      
-      console.log("not approved")
-      return
+
+      console.log("not approved");
+      return;
     }
 
     const tx = await axios.get(
-      `https://api.1inch.io/v5.0/56/swap?fromTokenAddress=${tokenOne.address}&toTokenAddress=${tokenTwo.address}&amount=${tokenOneAmount.toString().padEnd(tokenOne.decimals+tokenOneAmount.toString().length, '0')}&fromAddress=${address}&slippage=${slippage}`
-    )
+      `https://api.1inch.io/v5.0/56/swap?fromTokenAddress=${
+        tokenOne.address
+      }&toTokenAddress=${tokenTwo.address}&amount=${tokenOneAmount
+        .toString()
+        .padEnd(
+          tokenOne.decimals + tokenOneAmount.toString().length,
+          "0"
+        )}&fromAddress=${address}&slippage=${slippage}`
+    );
 
-    let decimals = Number(`1E${tokenTwo.decimals}`)
+    let decimals = Number(`1E${tokenTwo.decimals}`);
 
-    setTokenTwoAmount(Number((Number(tx.data.toTokenAmount)/decimals).toFixed(2)));
+    setTokenTwoAmount(
+      Number((Number(tx.data.toTokenAmount) / decimals).toFixed(2))
+    );
     setTxDetails(tx.data.tx);
   }
 
   useEffect(() => {
-    fetchPrices(tokenList[0].address, tokenList[1].address)
+    fetchPrices(tokenList[0].address, tokenList[1].address);
   }, [isConnected]);
 
-  useEffect(()=>{
-    if(txDetails.to && isConnected){
+  useEffect(() => {
+    if (txDetails.to && isConnected) {
       sendTransaction();
     }
-  }, [txDetails])
+  }, [txDetails]);
 
-  useEffect(()=>{
+  useEffect(() => {
     messageApi.destroy();
 
-    if(isConnected) {
+    if (isConnected) {
       messageApi.open({
-        type: 'success',
-        content: 'Metamask is connected',
+        type: "success",
+        content: "Metamask is connected",
         duration: 1.5,
-      })
+      });
     } else {
       messageApi.open({
-        type: 'warning',
-        content: 'Metamask is disconnected',
+        type: "warning",
+        content: "Metamask is disconnected",
         duration: 1.5,
-      })
+      });
     }
-  }, [isConnected])
+  }, [isConnected]);
 
-  useEffect(()=>{
+  useEffect(() => {
     messageApi.destroy();
 
-    if(isLoading){
+    if (isLoading) {
       messageApi.open({
-        type: 'loading',
-        content: 'Transaction is Pending...',
+        type: "loading",
+        content: "Transaction is Pending...",
         duration: 0,
-      })
-    }    
-  },[isLoading])
+      });
+    }
+  }, [isLoading]);
 
-  useEffect(()=>{
+  useEffect(() => {
     messageApi.destroy();
 
-    if(isSuccess){
+    if (isSuccess) {
       messageApi.open({
-        type: 'success',
-        content: 'Transaction Successful',
+        type: "success",
+        content: "Transaction Successful",
         duration: 1.5,
-      })
-    }else if(txDetails.to){
+      });
+    } else if (txDetails.to) {
       messageApi.open({
-        type: 'error',
-        content: 'Transaction Failed',
-        duration: 1.50,
-      })
+        type: "error",
+        content: "Transaction Failed",
+        duration: 1.5,
+      });
     }
-  },[isSuccess])
+  }, [isSuccess]);
 
   const settings = (
     <>
@@ -336,15 +375,28 @@ export default function Swap() {
       <div className="flex flex-col mx-auto w-full gap-20 py-[140px]">
         <div className="flex justify-end items-right gap-5 mr-8">
           <div className="items-center rounded-[5px] flex font-[500] text-white px-[15px] py-[10px] transition duration-300 hover:bg-[#222a3a] hover:cursor-pointer">
-            <img src="assets/images/bsc.svg" alt="Binance Smart Chain" className="h-7 w-7 pr-[10px]" />
+            <img
+              src="assets/images/bsc.svg"
+              alt="Binance Smart Chain"
+              className="h-7 w-7 pr-[10px]"
+            />
             Binance Smart Chain
           </div>
           {isConnected && chain?.id === 56 ? (
-            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer" onClick={() => disconnect()}>{shortenIfAddress(address)}</div>
+            <div
+              className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer"
+              onClick={() => disconnect()}
+            >
+              {shortenIfAddress(address)}
+            </div>
           ) : (
-            <div className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer" onClick={() => connect()}>Connect</div>
+            <div
+              className="bg-[#243056] rounded-[100px] text-[#5981f3] font-[700] py-[10px] px-[20px] transition duration-300 hover:text-[#3b4874] hover:cursor-pointer"
+              onClick={() => connect()}
+            >
+              Connect
+            </div>
           )}
-          
         </div>
         <div className="flex justify-center items-center">
           <div className="tradeBox">
@@ -366,27 +418,51 @@ export default function Swap() {
                 onChange={changeAmount}
                 disabled={!prices}
               />
+              {tokenOneUsd > 0 && (
+                <div className="absolute top-[65px] left-[15px]">
+                  ~ {tokenOneUsd} USD
+                </div>
+              )}
               <Input placeholder="0" value={tokenTwoAmount} disabled={true} />
+              {tokenTwoUsd > 0 && (
+                <div className="absolute bottom-[10px] left-[15px]">
+                  ~ {tokenTwoUsd} USD
+                </div>
+              )}
               <div className="switchButton" onClick={switchTokens}>
                 <ArrowDownOutlined className="switchArrow" />
               </div>
-              <div className="absolute top-[10px] right-5 text-[#5981e9]">Balance: {tokenOneBalance}</div>
+              <div className="absolute top-[10px] right-5 text-[#5981e9]">
+                Balance: {tokenOneBalance}
+              </div>
               <div className="assetOne" onClick={() => openModal(1)}>
-                <img src={tokenOne.img} alt="assetOneLogo" className="assetLogo" />
+                <img
+                  src={tokenOne.img}
+                  alt="assetOneLogo"
+                  className="assetLogo"
+                />
                 {tokenOne.ticker}
                 <DownOutlined />
               </div>
-              <div className="absolute top-[110px] right-5 text-[#5981e9]">Balance: {tokenTwoBalance}</div>
+              <div className="absolute top-[110px] right-5 text-[#5981e9]">
+                Balance: {tokenTwoBalance}
+              </div>
               <div className="assetTwo" onClick={() => openModal(2)}>
-                <img src={tokenTwo.img} alt="assetOneLogo" className="assetLogo" />
+                <img
+                  src={tokenTwo.img}
+                  alt="assetOneLogo"
+                  className="assetLogo"
+                />
                 {tokenTwo.ticker}
                 <DownOutlined />
               </div>
             </div>
-            {(tokenOneAmount == 0 || !isConnected) ? (
+            {tokenOneAmount == 0 || !isConnected ? (
               <div className="swapButton disabled">Swap</div>
             ) : (
-              <div className="swapButton" onClick={fetchDexSwap}>Swap</div>
+              <div className="swapButton" onClick={fetchDexSwap}>
+                Swap
+              </div>
             )}
           </div>
         </div>
