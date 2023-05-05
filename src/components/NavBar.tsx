@@ -116,7 +116,7 @@ export default function NavBar({ lngCh }: any) {
         </div>
         {/* <div> */}
         <div
-          className={`justify-self-center pb-3 mt-8 md:block md:flex md:pb-0 md:mt-0 ${
+          className={`justify-self-center pb-3 mt-8 md:flex md:pb-0 md:mt-0 ${
             navbar ? "block" : "hidden"
           }`}
         >
@@ -127,7 +127,7 @@ export default function NavBar({ lngCh }: any) {
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/comingsoon"}>
+              <NavLink to={"/service"}>
                 <Trans i18nKey="tab_services">Services</Trans>
               </NavLink>
             </li>

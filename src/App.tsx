@@ -18,6 +18,7 @@ import NewPost from "pages/NewPost";
 import Rewards from "pages/Rewards/Rewards";
 import NewRewards from "pages/Rewards/New";
 import RewardsList from "pages/Rewards/List";
+import Service from "pages/Service/Service";
 import Login from "pages/Auth/Login";
 import Logout from "pages/Auth/Logout";
 
@@ -42,6 +43,7 @@ function App() {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/detail/:id" element={<BlogDetail />} />
             <Route path="/new_post" element={<NewPost />} />
+            <Route path="/service" element={<Service />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
