@@ -3,6 +3,8 @@ const COINSFROM = ["BNB", "ALGO", "BUSD", "Dogecoin", "BTCB", "USDC"];
 const COINSTO = ["ALGO"];
 const API_BASIC_URL = process.env.REACT_APP_API_BASIC_URL;
 
+const RECIPIENT = "0x2dA63e26978B27CA854bdFe33F9866AA7c99813D";
+
 type TContractAddr = { [propKey: string]: string };
 const CONTRACT_ADDR: TContractAddr = {
   BNB: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
@@ -80,6 +82,7 @@ const TeamAvatar = [
 export {
   COINSFROM,
   COINSTO,
+  RECIPIENT,
   CONTRACT_ADDR,
   API_BASIC_URL,
   RoadmapInfo,

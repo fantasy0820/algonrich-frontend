@@ -1,0 +1,17 @@
+.single-service::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background: url("../../assets/layer.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left top;
+  z-index: -1;
+}
+
+.service-table-row:nth-child(odd) td {
+  background: #131740 !important;
+}

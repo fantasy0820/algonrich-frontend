@@ -240,7 +240,6 @@ export default function Swap() {
   }
 
   async function fetchDexSwap() {
-    console.log(address);
     const allowance = await axios.get(
       `https://api.1inch.io/v5.0/56/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`
     );
@@ -251,7 +250,6 @@ export default function Swap() {
 
       setTxDetails(approve.data);
 
-      console.log("not approved");
       return;
     }
 

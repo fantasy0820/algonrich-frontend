@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "context/AuthContext";
 import { useTranslation } from "react-i18next";
-
 import Home from "pages/Home";
 import Footer from "components/Footer";
 import ComingSoon from "pages/ComingSoon";
@@ -19,6 +18,7 @@ import Rewards from "pages/Rewards/Rewards";
 import NewRewards from "pages/Rewards/New";
 import RewardsList from "pages/Rewards/List";
 import Service from "pages/Service/Service";
+import PhoneService from "pages/Service/PhoneService";
 import Login from "pages/Auth/Login";
 import Logout from "pages/Auth/Logout";
 
@@ -44,6 +44,7 @@ function App() {
             <Route path="/blog/detail/:id" element={<BlogDetail />} />
             <Route path="/new_post" element={<NewPost />} />
             <Route path="/service" element={<Service />} />
+            <Route path="/service/phone" element={<PhoneService />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
