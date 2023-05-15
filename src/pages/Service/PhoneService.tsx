@@ -106,14 +106,14 @@ const PhoneService = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      // const config = await prepareWriteContract({
-      //   address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
-      //   abi: ALGO_ABI,
-      //   functionName: "transfer",
-      //   args: [RECIPIENT, parseEther(data.amount)],
-      // });
+      const config = await prepareWriteContract({
+        address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
+        abi: ALGO_ABI,
+        functionName: "transfer",
+        args: [RECIPIENT, parseEther(data.amount)],
+      });
 
-      // await writeContract(config);
+      await writeContract(config);
 
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/service/create`,
