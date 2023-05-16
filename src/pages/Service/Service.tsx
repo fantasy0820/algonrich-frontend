@@ -20,6 +20,7 @@ const TABLE_HEAD = [
   { id: "email", label: "Email", alignRight: false },
   { id: "amount", label: "Amount", alignRight: true },
   { id: "company", label: "Service Company", alignRight: false },
+  { id: "created", label: "Created", alignRight: false },
 ];
 
 const Service = () => {
@@ -38,6 +39,19 @@ const Service = () => {
 
   const handlePageClick = (selectedItem: { selected: number }) => {
     setCurrentPage(selectedItem.selected);
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(Date.parse(dateString));
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: false,
+    };
+    return new Intl.DateTimeFormat("en-GB", options).format(date);
   };
 
   useEffect(() => {
@@ -204,7 +218,7 @@ const Service = () => {
                             borderBottomColor: "#121a3e",
                           }}
                         >
-                          {row.amount}
+                          {row.amount} ALGO
                         </TableCell>
                         <TableCell
                           className="border border-[#121a3e]"
@@ -215,6 +229,16 @@ const Service = () => {
                           }}
                         >
                           {row.company}
+                        </TableCell>
+                        <TableCell
+                          className="border border-[#121a3e]"
+                          style={{
+                            background: "#0d102d",
+                            color: "#ddd",
+                            borderBottomColor: "#121a3e",
+                          }}
+                        >
+                          {formatDate(row.created_at)}
                         </TableCell>
                       </TableRow>
                     );
