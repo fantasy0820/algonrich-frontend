@@ -137,7 +137,7 @@ const Service = () => {
           </p>
           <TableContainer>
             <Table stickyHeader>
-              <TableHead className="">
+              <TableHead className="font-bold">
                 <TableRow>
                   {TABLE_HEAD.map((column) => (
                     <TableCell
