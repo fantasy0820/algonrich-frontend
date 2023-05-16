@@ -7,7 +7,14 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Badge,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
+import { Check, Delete } from "@mui/icons-material";
+import { Modal } from "antd";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import AdminOnly from "components/AdminOnly";
@@ -19,14 +26,17 @@ const TABLE_HEAD = [
   { id: "name", label: "User name", alignRight: false },
   { id: "email", label: "Email", alignRight: false },
   { id: "amount", label: "Amount", alignRight: true },
-  { id: "company", label: "Service Company", alignRight: false },
+  { id: "company", label: "Company", alignRight: false },
   { id: "created", label: "Created", alignRight: false },
+  { id: "paid", label: "Paid?", alignRight: false },
+  { id: "action", label: "...", alignRight: false },
 ];
 
 const Service = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [serviceData, setServiceData] = useState([]);
   const [isGet, setGetServices] = useState(false);
+  const [isDeleteVisible, setDeleteVisible] = useState(false);
 
   const getServiceList = async () => {
     const response = await axios.get(
@@ -52,6 +62,20 @@ const Service = () => {
       hour12: false,
     };
     return new Intl.DateTimeFormat("en-GB", options).format(date);
+  };
+
+  const removeService = async (id: number) => {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/service/${id}`);
+
+    setGetServices(false);
+    toastr.success("Successfully removed!");
+  };
+
+  const updateService = async (id: number) => {
+    await axios.patch(`${process.env.REACT_APP_API_URL}/service/${id}`);
+
+    setGetServices(false);
+    toastr.success("Successfully updated!");
   };
 
   useEffect(() => {
@@ -218,7 +242,7 @@ const Service = () => {
                             borderBottomColor: "#121a3e",
                           }}
                         >
-                          {row.amount} ALGO
+                          {row.amount}
                         </TableCell>
                         <TableCell
                           className="border border-[#121a3e]"
@@ -239,6 +263,101 @@ const Service = () => {
                           }}
                         >
                           {formatDate(row.created_at)}
+                        </TableCell>
+                        <TableCell
+                          className="border border-[#121a3e]"
+                          style={{
+                            background: "#0d102d",
+                            color: "#ddd",
+                            borderBottomColor: "#121a3e",
+                            textAlign: "center",
+                          }}
+                        >
+                          <Badge
+                            badgeContent={row.isPaid ? "Completed" : "Pending"}
+                            color={row.isPaid ? "success" : "warning"}
+                          ></Badge>
+                        </TableCell>
+                        <TableCell
+                          className="border border-[#121a3e]"
+                          style={{
+                            background: "#0d102d",
+                            color: "#ddd",
+                            borderBottomColor: "#121a3e",
+                          }}
+                        >
+                          {!row.isPaid && (
+                            <Tooltip title="Mark as paid">
+                              <IconButton
+                                sx={{
+                                  borderRadius: "50%",
+                                  backgroundColor: "#07bc0c",
+                                  color: "#fff",
+                                  "&:hover": {
+                                    backgroundColor: "#278029",
+                                  },
+                                }}
+                                onClick={() => {
+                                  updateService(row.id);
+                                }}
+                              >
+                                <Check sx={{ width: "16px", height: "16px" }} />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+
+                          <Tooltip title="Delete">
+                            <IconButton
+                              sx={{
+                                marginLeft: "5px",
+                                borderRadius: "50%",
+                                backgroundColor: "#ff2d55",
+                                color: "#fff",
+                                "&:hover": {
+                                  backgroundColor: "#a3374b",
+                                },
+                              }}
+                              onClick={() => {
+                                setDeleteVisible(true);
+                              }}
+                            >
+                              <Delete sx={{ width: "16px", height: "16px" }} />
+                            </IconButton>
+                          </Tooltip>
+                          <Modal
+                            open={isDeleteVisible}
+                            className="modal pb-0"
+                            footer={
+                              <div className="flex justify-end bg-[#131740] py-2 px-2 rounded-b-[7px]">
+                                <button
+                                  className="bg-[#ff06b7] hover:opacity-80 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => {
+                                    removeService(row.id);
+                                    setDeleteVisible(false);
+                                  }}
+                                >
+                                  OK
+                                </button>
+                                <button
+                                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ml-2"
+                                  onClick={() => {
+                                    setDeleteVisible(false);
+                                  }}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            }
+                          >
+                            <div className="modal-header bg-[#ff06b7] text-white p-4 rounded-t-[7px]">
+                              <h2>Confirm Removal</h2>
+                            </div>
+                            <div className="modal-body p-4 bg-[#131740]">
+                              <p>
+                                Are you sure you want to remove this request?
+                              </p>
+                            </div>
+                          </Modal>
                         </TableCell>
                       </TableRow>
                     );

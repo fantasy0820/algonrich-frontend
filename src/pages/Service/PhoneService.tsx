@@ -212,7 +212,6 @@ const PhoneService = () => {
                     control={control}
                     render={({ field }) => (
                       <Autocomplete
-                        freeSolo
                         onChange={(event, newValue) => field.onChange(newValue)}
                         options={servicesOption.map((option) => option.name)}
                         renderTags={(value, getTagProps) =>
