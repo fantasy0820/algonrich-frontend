@@ -33,8 +33,8 @@ const Login = () => {
     <>
       <div className="justify-between mx-auto w-full lg:w-[90%] py-[250px]">
         <div className="flex flex-row flex-wrap mx-[-15px] justify-center text-center">
-          <div className="flex-[0_0_50%] max-w-[50%] relative w-full px-[15px]">
-            <div className="bg-[#131740] px-[50px] py-[40px] mx-[80px]">
+          <div className="md:flex-[0_0_50%] md:max-w-[50%] relative w-full px-[15px]">
+            <div className="bg-[#131740] px-[50px] py-[40px] mx-[10px] 2xl:mx-[80px]">
               <p className="text-[25px] mb-5 text-center text-white leading-8">
                 LOGIN
               </p>

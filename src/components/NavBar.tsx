@@ -37,7 +37,7 @@ export default function NavBar({ lngCh }: any) {
       label: <NavLink to="/contactus">Contact US</NavLink>,
     },
   ];
-  const [navbar, setNavbar] = useState(true);
+  const [navbar, setNavbar] = useState(false);
   const [navbarCls, setNavbarCls] = useState("navbar");
   const { i18n, ready } = useTranslation();
   useEffect(() => {

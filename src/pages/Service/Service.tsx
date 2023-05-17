@@ -290,6 +290,7 @@ const Service = () => {
                             <Tooltip title="Mark as paid">
                               <IconButton
                                 sx={{
+                                  marginRight: "5px",
                                   borderRadius: "50%",
                                   backgroundColor: "#07bc0c",
                                   color: "#fff",
@@ -309,7 +310,6 @@ const Service = () => {
                           <Tooltip title="Delete">
                             <IconButton
                               sx={{
-                                marginLeft: "5px",
                                 borderRadius: "50%",
                                 backgroundColor: "#ff2d55",
                                 color: "#fff",
