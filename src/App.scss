@@ -1,5 +1,6 @@
 // @import url('/assets/fonts/font.scss');
-@use  '../public/assets/fonts/font.scss';
+@use '../public/assets/fonts/font.scss';
+
 .App {
   text-align: center;
 }
@@ -34,11 +35,12 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
-.lang-selector-menu div{
-overflow-y: hidden !important;
-}
 
+.lang-selector-menu div {
+  overflow-y: hidden !important;
+}

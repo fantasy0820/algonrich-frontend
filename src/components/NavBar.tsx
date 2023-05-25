@@ -47,11 +47,11 @@ export default function NavBar({ lngCh }: any) {
   }, []);
   const scrollFunction = () => {
     if (document.documentElement.scrollTop < 200) {
-      setNavbarCls("navbar");
+      setNavbarCls("navbar z-[100]");
     } else if (document.documentElement.scrollTop < 500) {
-      setNavbarCls("navbar is-fixed");
+      setNavbarCls("navbar is-fixed z-[100]");
     } else {
-      setNavbarCls("navbar is-fixed is-small");
+      setNavbarCls("navbar is-fixed is-small z-[100]");
     }
   };
   const changeLng = (lang: any) => {
@@ -62,8 +62,8 @@ export default function NavBar({ lngCh }: any) {
       <div className="justify-between mx-auto w-[95%] md:items-center md:flex">
         <div className="">
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
-            {/* <a href="/" className="flex md:hidden xl:flex align-middle"> */}
-            <NavLink className="flex flex-none xl:flex align-middle" to="/">
+            {/* <a href="/" className="flex align-middle md:hidden xl:flex"> */}
+            <NavLink className="flex flex-none align-middle xl:flex" to="/">
               <img
                 src="/assets/images/logo1.png"
                 alt="Logo"
@@ -74,7 +74,7 @@ export default function NavBar({ lngCh }: any) {
               </h1>
             </NavLink>
             {/* </a> */}
-            <div className="md:hidden flex space-x-1">
+            <div className="flex space-x-1 md:hidden">
               {/* <LanguageSelector change={changeLng} /> */}
               <LangFlagSelector change={changeLng} />
               <button
@@ -116,9 +116,8 @@ export default function NavBar({ lngCh }: any) {
         </div>
         {/* <div> */}
         <div
-          className={`justify-self-center pb-3 mt-8 md:flex md:pb-0 md:mt-0 ${
-            navbar ? "block" : "hidden"
-          }`}
+          className={`justify-self-center pb-3 mt-8 md:flex md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
+            }`}
         >
           <ul className="items-center justify-center space-y-8 md:flex md:space-x-2 2xl:space-x-6 md:space-y-0 py-[30px] text-white font-chakrapetch uppercase font-bold">
             <li className="">
@@ -178,7 +177,7 @@ export default function NavBar({ lngCh }: any) {
             </li>
           </ul>
 
-          <div className="my-3 mx-auto lg:mt-3 space-y-2 md:hidden lg:hidden">
+          <div className="mx-auto my-3 space-y-2 lg:mt-3 md:hidden lg:hidden">
             <a
               href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
               target={"_blank"}
@@ -195,7 +194,7 @@ export default function NavBar({ lngCh }: any) {
           </div>
         </div>
         {/* </div> */}
-        <div className="hidden lg:flex md:flex space-x-2">
+        <div className="hidden space-x-2 lg:flex md:flex">
           <a
             href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
             target={"_blank"}
@@ -210,7 +209,7 @@ export default function NavBar({ lngCh }: any) {
             <Trans i18nKey="btn_swap">Swap</Trans>
           </NavLink>
         </div>
-        <div className="lg:hidden flex-initial hidden md:inline-block">
+        <div className="flex-initial hidden lg:hidden md:inline-block">
           <ConfigProvider
             theme={{
               token: {
@@ -221,7 +220,7 @@ export default function NavBar({ lngCh }: any) {
           >
             <Dropdown menu={{ items }} placement="bottomCenter">
               {/* <Button>bottomRight</Button> */}
-              <button className="text-gray-700 rounded-md cursor-pointer outline-none focus:border-gray-400 focus:border">
+              <button className="text-gray-700 rounded-md outline-none cursor-pointer focus:border-gray-400 focus:border">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="w-6 h-6 text-white"
@@ -241,7 +240,7 @@ export default function NavBar({ lngCh }: any) {
           </ConfigProvider>
         </div>
 
-        <div className="hidden md:inline-block ml-2">
+        <div className="hidden ml-2 md:inline-block">
           {/* <LanguageSelector change={changeLng} /> */}
           <LangFlagSelector change={changeLng} />
         </div>
