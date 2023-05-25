@@ -61,9 +61,9 @@ const TeamAvatar = [
   },
   {
     role: "CTO",
-    name: "Amaury Loaiza",
-    url: "/assets/images/team/AmauryLoaiza.jpg",
-    link_url: "https://www.linkedin.com/in/amaury-loaiza",
+    name: "Eugene Levy",
+    url: "/assets/images/team/eugene.png",
+    link_url: "https://www.linkedin.com/in/eugene-levy-946a8a234/",
   },
   {
     role: "CMO",
