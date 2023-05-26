@@ -34,17 +34,7 @@
     display: none;
   }
 
-  .category-box {
-    display: block;
-  }
-}
 
-@media only screen and (min-width: 814px) {
-
-
-  .category-box {
-    display: none;
-  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -147,4 +137,17 @@
 
 .dot {
   display: none !important;
+}
+
+.gradient {
+  background: rgb(255, 255, 255);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 50%, rgba(20, 26, 49, 1) 99%);
+}
+
+.control-arrow {
+  z-index: 50 !important;
+}
+
+.category-box {
+  transition: width 2s;
 }
