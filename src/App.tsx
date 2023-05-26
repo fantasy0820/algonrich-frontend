@@ -9,6 +9,7 @@ import ContactUS from "pages/ContactUS";
 import "App.scss";
 import NavBar from "components/NavBar";
 import ScrollTopBtn from "components/ScrollTobBtn";
+import Store from "pages/Store";
 import Swap from "pages/Swap";
 import { ToastContainer, toast } from "react-toastify";
 import Blog from "pages/Blog/Blog";
@@ -34,6 +35,7 @@ function App() {
           <NavBar lngCh={changeLanguage} />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/store" element={<Store />} />
             <Route path="/comingsoon" element={<ComingSoon />} />
             <Route path="/rewards/:id" element={<Rewards />} />
             <Route path="/new_reward" element={<NewRewards />} />
