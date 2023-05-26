@@ -1,0 +1,142 @@
+@media only screen and (max-width: 1190px) {
+  .category_bar {
+    margin-top: 110px;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .category_bar {
+    margin-top: 84px;
+  }
+}
+
+@media only screen and (max-width: 814px) {
+  .category_bar {
+    margin-top: 108px;
+  }
+
+  .list-category {
+    display: none;
+  }
+
+  .category-box {
+    display: block;
+  }
+}
+
+@media only screen and (min-width: 814px) {
+  .category-box {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .category_bar {
+    margin-top: 80px;
+  }
+}
+
+@media only screen and (max-width: 717px) {
+  .category-box {
+    display: flex;
+  }
+}
+
+@media only screen and (max-width: 1368px) {
+  .store-item {
+    height: auto;
+  }
+
+  .item-group {
+    margin-top: -260px;
+    margin-bottom: 260px;
+  }
+
+  .item-title {
+    font-size: 14px;
+  }
+
+  .item-name {
+    font-size: 10px;
+  }
+}
+
+@media only screen and (max-width: 1075px) {
+  .store-item {
+    height: auto;
+  }
+
+  .item-group {
+    margin-top: -200px;
+    margin-bottom: 200px;
+  }
+
+  .item-title {
+    font-size: 12px;
+  }
+
+  .item-name {
+    font-size: 8px;
+  }
+}
+
+@media only screen and (max-width: 810px) {
+  .store-item {
+    height: auto;
+    width: 45%;
+    margin: 10px;
+  }
+
+  .item-group {
+    display: flex;
+    justify-content: center;
+    margin-top: -140px;
+    margin-bottom: 140px;
+  }
+
+  .item-title {
+    line-height: 10px;
+  }
+}
+
+@media only screen and (max-width: 539px) {
+  .store-item {
+    height: auto;
+    width: 95%;
+    margin: 10px;
+  }
+
+  .item-group {
+    display: flex;
+    justify-content: center;
+    margin-top: -100px;
+    margin-bottom: 100px;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  .store-item {
+    height: auto;
+    width: 95%;
+    margin: 10px;
+  }
+}
+
+.store-item {
+  background: #e3e6e6;
+}
+
+.dot {
+  display: none !important;
+}
+
+.control-next,
+.control-prev {
+  height: 450px;
+  width: 100px;
+}
+
+.carousel .control-arrow:before,
+.carousel.carousel-slider .control-arrow:before {
+  display: none !important;
+}

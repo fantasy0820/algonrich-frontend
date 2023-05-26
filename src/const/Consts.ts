@@ -62,7 +62,7 @@ const TeamAvatar = [
   {
     role: "CTO",
     name: "Eugene Levy",
-    url: "/assets/images/team/eugene.png",
+    url: "/assets/images/team/eugene.jpg",
     link_url: "https://www.linkedin.com/in/eugene-levy-946a8a234/",
   },
   {

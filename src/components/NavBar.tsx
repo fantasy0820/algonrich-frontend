@@ -116,12 +116,13 @@ export default function NavBar({ lngCh }: any) {
         </div>
         {/* <div> */}
         <div
-          className={`justify-self-center pb-3 mt-8 md:flex md:pb-0 md:mt-0 ${navbar ? "block" : "hidden"
-            }`}
+          className={`justify-self-center pb-3 mt-8 md:flex md:pb-0 md:mt-0 ${
+            navbar ? "block" : "hidden"
+          }`}
         >
           <ul className="items-center justify-center space-y-8 md:flex md:space-x-2 2xl:space-x-6 md:space-y-0 py-[30px] text-white font-chakrapetch uppercase font-bold">
             <li className="">
-              <NavLink to={"/comingsoon"}>
+              <NavLink to={"/store"}>
                 <Trans i18nKey="tab_store">Store</Trans>
               </NavLink>
             </li>
