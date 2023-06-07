@@ -100,7 +100,7 @@ const BlogItem: React.FC<{
               <div className="modal-header bg-[#ff06b7] text-white p-4 rounded-t-[7px]">
                 <h2>Confirm Removal</h2>
               </div>
-              <div className="modal-body p-4 bg-[#131740]">
+              <div className="modal-body p-4 bg-[#131740] text-white">
                 <p>Are you sure you want to remove this blog?</p>
               </div>
             </Modal>

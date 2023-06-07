@@ -10,6 +10,8 @@ import "App.scss";
 import NavBar from "components/NavBar";
 import ScrollTopBtn from "components/ScrollTobBtn";
 import Store from "pages/Store";
+import ProductForm from "pages/Store/new";
+import ProductDetail from "pages/Store/detail";
 import Swap from "pages/Swap";
 import { ToastContainer, toast } from "react-toastify";
 import Blog from "pages/Blog/Blog";
@@ -36,6 +38,8 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/store" element={<Store />} />
+            <Route path="/store/new" element={<ProductForm />} />
+            <Route path="/store/detail/:id" element={<ProductDetail />} />
             <Route path="/comingsoon" element={<ComingSoon />} />
             <Route path="/rewards/:id" element={<Rewards />} />
             <Route path="/new_reward" element={<NewRewards />} />

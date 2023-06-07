@@ -349,6 +349,7 @@ export default function Swap() {
       <Modal
         open={isOpen}
         footer={null}
+        className="swap-modal"
         onCancel={() => setIsOpen(false)}
         title="Select a token"
       >

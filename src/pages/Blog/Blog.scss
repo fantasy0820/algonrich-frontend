@@ -107,8 +107,14 @@
   background-size: cover;
 }
 
-.ant-modal-footer {
-  margin-top: 0px !important;
+.modal {
+  .ant-modal-footer {
+    margin-top: 0px !important;
+  }
+
+  .ant-modal-content {
+    padding: 0px;
+  }
 }
 
 .blog-detail a {

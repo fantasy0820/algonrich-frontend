@@ -88,8 +88,6 @@
   }
 
   .item-group {
-    display: flex;
-    justify-content: center;
     margin-top: -140px;
     margin-bottom: 140px;
   }
@@ -107,8 +105,6 @@
   }
 
   .item-group {
-    display: flex;
-    justify-content: center;
     margin-top: -100px;
     margin-bottom: 100px;
   }
@@ -139,4 +135,51 @@
 .carousel .control-arrow:before,
 .carousel.carousel-slider .control-arrow:before {
   display: none !important;
+}
+
+.product-name {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.product-description ul {
+  list-style: disc;
+  margin: 16px 0px;
+  padding-left: 40px;
+}
+
+.buy-modal {
+  .ant-modal-content {
+    background-color: #131740;
+  }
+
+  .ant-modal-title {
+    background-color: #131740;
+    font-size: 24px;
+    color: white;
+  }
+
+  .ant-btn-default {
+    background-color: #6b7280 !important;
+    color: white !important;
+    border: none;
+  }
+
+  .ant-btn-default:hover {
+    background-color: #374151 !important;
+  }
+
+  .ant-btn-primary {
+    background-color: #3498db !important;
+    color: white !important;
+    border: none;
+  }
+
+  .ant-btn-primary:hover {
+    background-color: #13659c !important;
+  }
+
+  .ant-modal-close-x {
+    color: white;
+  }
 }
