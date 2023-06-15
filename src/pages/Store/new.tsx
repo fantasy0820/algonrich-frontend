@@ -85,6 +85,7 @@ const defaultValues = {
   description: "",
   images: null,
   inStock: true,
+  stock: 0,
   code: "",
   keywords: ["Blockchain"],
   price: 0,
@@ -156,6 +157,7 @@ const ProductForm = () => {
           description: quilValue,
           code: data.code,
           inStock: data.inStock,
+          stock: data.stock,
           keywords: JSON.stringify(data.keywords),
           price: data.price,
           salePrice: data.salePrice,
@@ -262,6 +264,7 @@ const ProductForm = () => {
                     />
                   </div>
 
+                  <RHFTextField name="stock" label="Stock Amount" />
                   <RHFTextField name="code" label="Product Code" />
 
                   <Controller

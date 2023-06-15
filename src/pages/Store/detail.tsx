@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from "antd";
 import { message } from "antd";
 import axios from "axios";
+import he from "he";
 import {
   solid,
   regular,
@@ -30,6 +31,7 @@ interface ProductType {
   description: string;
   images: string;
   inStock: boolean;
+  stock: number;
   code: string;
   keywords: string;
   price: number;
@@ -45,6 +47,7 @@ const ProductDetail = () => {
     description: "",
     images: "",
     inStock: true,
+    stock: 0,
     code: "",
     keywords: "",
     price: 0,
@@ -56,6 +59,7 @@ const ProductDetail = () => {
   const [totalPrice, setTotal] = useState(0);
   const [isGet, setGetProduct] = useState(false);
   const [qtyError, setQtyError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
@@ -75,6 +79,7 @@ const ProductDetail = () => {
       description: response.data.description,
       images: response.data.images,
       inStock: response.data.inStock,
+      stock: response.data.stock,
       code: response.data.code,
       keywords: response.data.keywords,
       price: response.data.price,
@@ -85,14 +90,14 @@ const ProductDetail = () => {
   };
 
   const handleOk = async () => {
-    const config = await prepareWriteContract({
-      address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
-      abi: ALGO_ABI,
-      functionName: "transfer",
-      args: [RECIPIENT, parseEther(totalPrice.toString())],
-    });
+    // const config = await prepareWriteContract({
+    //   address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
+    //   abi: ALGO_ABI,
+    //   functionName: "transfer",
+    //   args: [RECIPIENT, parseEther(totalPrice.toString())],
+    // });
 
-    await writeContract(config);
+    // await writeContract(config);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API_URL}/order`,
@@ -116,10 +121,16 @@ const ProductDetail = () => {
     const qty = document.getElementById("qty") as HTMLInputElement;
     if (qty.value === "") {
       setQtyError(true);
+      setErrorMsg('Qty is required!');
     } else {
-      setQtyError(false);
-      setQty(parseInt(qty.value));
-      setTotal(qtyVal * productData.price);
+      if(parseInt(qty.value) > productData.stock) {
+        setQtyError(true);
+        setErrorMsg('Out of stock!');
+      } else {
+        setQtyError(false);
+        setQty(parseInt(qty.value));
+        setTotal(qtyVal * productData.price);
+      }
 
       if (type === "buy") {
         setIsModalVisible(true);
@@ -195,7 +206,7 @@ const ProductDetail = () => {
         )}
       </div>
       <section className="min-h-[100vh]">
-        <section className="flex justify-between h-[100vh] my-0 mx-auto pt-[5rem]">
+        <section className="flex justify-between my-0 mx-auto pt-[5rem]">
           <section>
             <img
               src={productData.images && getFirstImage(productData.images)}
@@ -284,7 +295,9 @@ const ProductDetail = () => {
               <h4>About this Item</h4>
               <div
                 className="product-description"
-                dangerouslySetInnerHTML={{ __html: productData.description }}
+                dangerouslySetInnerHTML={{
+                  __html: he.decode(productData.description),
+                }}
               ></div>
             </section>
           </section>
@@ -306,7 +319,7 @@ const ProductDetail = () => {
                 className="text-[#40cd5e] text-[1rem]"
                 htmlFor="inputField"
               >
-                In Stock
+                In Stock: {productData.stock}
               </label>
               <input
                 className="w-[5rem] text-white text-[0.8rem] bg-[#131740] p-[0.2rem] text-center rounded-[0.2rem] outline-none border border-[#c3c3c3]"
@@ -319,7 +332,7 @@ const ProductDetail = () => {
               />
               {qtyError && (
                 <span className="text-[#ff2d55] text-[14px]">
-                  * Qty is required!
+                  * {errorMsg}
                 </span>
               )}
             </section>
@@ -328,8 +341,9 @@ const ProductDetail = () => {
                 Add to Cart
               </button>
               <button
-                className="bg-[#f2a942] hover:bg-[#e9c939] text-xs text-black rounded-[10rem] p-[0.5rem] border-none outline-none cursor-pointer"
+                className={`bg-[#f2a942] hover:bg-[#e9c939] text-xs text-black rounded-[10rem] p-[0.5rem] border-none outline-none ${qtyError ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                 onClick={() => checkQty("buy")}
+                disabled={qtyError}
               >
                 Buy Now
               </button>

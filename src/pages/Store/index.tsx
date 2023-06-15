@@ -56,66 +56,68 @@ export default function Store() {
     <>
       <div className="flex flex-col items-center justify-center w-full">
         <div className="relative flex flex-row justify-between bg-[#141a31] mt-[90px] category_bar w-full">
-          <div className="responsive mx-10">
-            <div className="bg-[#141a31] store flex flex-row h-[36px] items-center ">
-              <p
-                className="px-2 py-1 text-base text-white cursor-pointer hover:rounded-sm hover:border-white hover:border-2"
-                onClick={() => {
-                  setListShow(!listShow);
-                }}
-              >
-                {" "}
-                All
-                <FontAwesomeIcon icon={faList} className="mx-2" />
-              </p>
-              <a
-                href=""
-                className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
-              >
-                {" "}
-                Today's Deals
-              </a>
-              <a
-                href=""
-                className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
-              >
-                {" "}
-                Customer Service
-              </a>
-              <a
-                href=""
-                className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
-              >
-                Registry
-              </a>
-              <a
-                href=""
-                className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
-              >
-                Gift Cards
-              </a>
-              <a
-                href=""
-                className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
-              >
-                Sell
-              </a>
+          <AdminOnly>
+            <div className="responsive mx-10">
+              <div className="bg-[#141a31] store flex flex-row h-[36px] items-center ">
+                <p
+                  className="px-2 py-1 text-base text-white cursor-pointer hover:rounded-sm hover:border-white hover:border-2"
+                  onClick={() => {
+                    setListShow(!listShow);
+                  }}
+                >
+                  {" "}
+                  All
+                  <FontAwesomeIcon icon={faList} className="mx-2" />
+                </p>
+                <Link
+                  to="/store/orders"
+                  className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
+                >
+                  {" "}
+                  Order List
+                </Link>
+                <a
+                  href=""
+                  className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
+                >
+                  {" "}
+                  Customer Service
+                </a>
+                <a
+                  href=""
+                  className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
+                >
+                  Registry
+                </a>
+                <a
+                  href=""
+                  className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
+                >
+                  Gift Cards
+                </a>
+                <a
+                  href=""
+                  className="px-2 py-1 text-base text-white hover:border-white hover:rounded-sm hover:border-2 list-category"
+                >
+                  Sell
+                </a>
+              </div>
+              {listShow && (
+                <ul
+                  className="top-[36px] left-0 absolute bg-[#141a31] w-[150px] z-[100000] flex flex-col category-box"
+                  onMouseLeave={() => {
+                    setListShow(false);
+                  }}
+                >
+                  <li className="p-1 text-sm text-white">Order List</li>
+                  <li className="p-1 text-sm text-white">Customer Service</li>
+                  <li className="p-1 text-sm text-white">Registry</li>
+                  <li className="p-1 text-sm text-white">Gift Card</li>
+                  <li className="p-1 text-sm text-white">Sell</li>
+                </ul>
+              )}
             </div>
-            {listShow && (
-              <ul
-                className="top-[36px] left-0 absolute bg-[#141a31] w-[150px] z-[100000] flex flex-col category-box"
-                onMouseLeave={() => {
-                  setListShow(false);
-                }}
-              >
-                <li className="p-1 text-sm text-white">Today's Deals</li>
-                <li className="p-1 text-sm text-white">Customer Service</li>
-                <li className="p-1 text-sm text-white">Registry</li>
-                <li className="p-1 text-sm text-white">Gift Card</li>
-                <li className="p-1 text-sm text-white">Sell</li>
-              </ul>
-            )}
-          </div>
+          </AdminOnly>
           <AdminOnly>
             <Link
               to="/store/new"
