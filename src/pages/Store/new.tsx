@@ -1,19 +1,19 @@
-import * as Yup from "yup";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "notistack";
-import { useForm, Controller, FormProvider } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { styled } from "@mui/material/styles";
-import "react-toastify/dist/ReactToastify.min.css";
-import "./NewProduct.scss";
-import { InboxOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
-import { message, Upload } from "antd";
-import { LoadingButton } from "@mui/lab";
-import ReactQuill from "react-quill";
-import axios from "axios";
-import "react-quill/dist/quill.snow.css";
+import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { styled } from '@mui/material/styles';
+import 'react-toastify/dist/ReactToastify.min.css';
+import './NewProduct.scss';
+import { InboxOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { message, Upload } from 'antd';
+import { LoadingButton } from '@mui/lab';
+import ReactQuill from 'react-quill';
+import axios from 'axios';
+import 'react-quill/dist/quill.snow.css';
 
 // import MUIRichTextEditor from "mui-rte";
 
@@ -25,69 +25,71 @@ import {
   Button,
   TextField,
   Autocomplete,
-} from "@mui/material";
-import RHFTextField from "components/RHFTextField";
-import RHFSwitch from "components/RHFSwitch";
+} from '@mui/material';
+import RHFTextField from 'components/RHFTextField';
+import RHFSwitch from 'components/RHFSwitch';
 
 const CssTextField = styled(TextField)({
-  "& .MuiInputLabel-formControl": {
-    color: "white",
+  '& .MuiInputLabel-formControl': {
+    color: 'white',
   },
-  "& label.Mui-focused": {
-    color: "white",
+  '& label.Mui-focused': {
+    color: 'white',
   },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-    color: "white",
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'white',
+    color: 'white',
   },
-  "& .MuiAutocomplete-tag": {
-    color: "white",
+  '& .MuiAutocomplete-tag': {
+    color: 'white',
   },
-  "& .MuiChip-deleteIcon": {
-    color: "white !important",
+  '& .MuiChip-deleteIcon': {
+    color: 'white !important',
   },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "gray",
-      color: "white",
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'gray',
+      color: 'white',
     },
-    "&:hover fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&:hover fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&.Mui-focused fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
+    '& .MuiOutlinedInput-input': {
+      color: 'white',
     },
   },
 });
 
 const CssMyEditor = styled(ReactQuill)({
-  "& .ql-snow": {
-    color: "white",
+  '& .ql-snow': {
+    color: 'white',
   },
 });
 
 const NewBlogSchema = Yup.object().shape({
-  name: Yup.string().required("Product name is required"),
+  name: Yup.string().required('Product name is required'),
+  category: Yup.string().required('Category is required'),
   // description: Yup.string().required("Description is required"),
   // images: Yup.mixed().required("Cover is required"),
-  code: Yup.string().required("Code is required"),
-  price: Yup.number().required("Price is required"),
-  salePrice: Yup.number().required("Sale price is required"),
+  code: Yup.string().required('Code is required'),
+  price: Yup.number().required('Price is required'),
+  salePrice: Yup.number().required('Sale price is required'),
 });
 
 const defaultValues = {
-  name: "",
-  description: "",
+  name: '',
+  description: '',
   images: null,
   inStock: true,
   stock: 0,
-  code: "",
-  keywords: ["Blockchain"],
+  code: '',
+  category: [''],
+  keywords: ['Blockchain'],
   price: 0,
   salePrice: 0,
 };
@@ -95,30 +97,30 @@ const defaultValues = {
 const modules = {
   toolbar: [
     [{ header: [1, 2, 3, 4, 5, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
     ],
-    ["link", "image"],
-    ["clean"],
+    ['link', 'image'],
+    ['clean'],
   ],
 };
 
 const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
 ];
 
 const { Dragger } = Upload;
@@ -128,10 +130,16 @@ interface TagType {
   name: string;
 }
 
+interface CategoryType {
+  id: number;
+  name: string;
+}
+
 const ProductForm = () => {
-  const [quilValue, setQuilValue] = useState("");
+  const [quilValue, setQuilValue] = useState('');
   const [productImages, setImages] = useState<string[]>([]);
   const [keywordsOption, setKeywordsOption] = useState<Array<TagType>>([]);
+  const [categories, setCategory] = useState<Array<CategoryType>>([]);
 
   const methods = useForm({
     resolver: yupResolver(NewBlogSchema),
@@ -156,20 +164,21 @@ const ProductForm = () => {
           images: JSON.stringify(productImages),
           description: quilValue,
           code: data.code,
+          categoryId: parseInt(data.category),
           inStock: data.inStock,
-          stock: data.stock,
+          stock: parseInt(data.stock),
           keywords: JSON.stringify(data.keywords),
           price: data.price,
           salePrice: data.salePrice,
-        }
+        },
       );
 
       if (response.data.id > 0) {
-        message.success("Product is successfully registered!");
+        message.success('Product is successfully registered!');
       }
 
       reset();
-      setQuilValue("");
+      setQuilValue('');
       setImages([]);
       setKeywordsOption([]);
     } catch (error) {
@@ -178,31 +187,43 @@ const ProductForm = () => {
   };
 
   const props: UploadProps = {
-    name: "file",
+    name: 'file',
     multiple: true,
-    action: process.env.REACT_APP_API_URL + "/file-service/product-upload",
+    action: process.env.REACT_APP_API_URL + '/file-service/product-upload',
     onChange(info) {
       const { status } = info.file;
-      if (status !== "uploading") {
+      if (status !== 'uploading') {
       }
-      if (status === "done") {
+      if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
         setImages((prevImages) => [...prevImages, info.file.response.imageUrl]);
-      } else if (status === "error") {
+      } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
     onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
+      console.log('Dropped files', e.dataTransfer.files);
     },
+  };
+
+  const getCategories = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/category`,
+    );
+
+    setCategory(response.data);
   };
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("useremail") !== "admin@algonrich.com") {
-      navigate("/");
+    if (localStorage.getItem('useremail') !== 'admin@algonrich.com') {
+      navigate('/');
     }
+  }, []);
+
+  useEffect(() => {
+    getCategories();
   }, []);
 
   return (
@@ -259,13 +280,50 @@ const ProductForm = () => {
                         mb: 1,
                         mx: 0,
                         width: 1,
-                        justifyContent: "space-between",
+                        justifyContent: 'space-between',
                       }}
                     />
                   </div>
 
                   <RHFTextField name="stock" label="Stock Amount" />
                   <RHFTextField name="code" label="Product Code" />
+
+                  <Controller
+                    name="category"
+                    control={control}
+                    render={({ field, fieldState: { error } }) => (
+                      <Autocomplete
+                        freeSolo
+                        onChange={(event, newValue) => {
+                          const selectedCategory = categories.find(
+                            (category) => category.name === newValue,
+                          );
+                          field.onChange(
+                            selectedCategory ? selectedCategory.id : null,
+                          );
+                        }}
+                        options={categories.map((option) => option.name)}
+                        renderTags={(value, getCategoryProps) =>
+                          value.map((option, index) => (
+                            <Chip
+                              {...getCategoryProps({ index })}
+                              key={option}
+                              size="small"
+                              label={option}
+                            />
+                          ))
+                        }
+                        renderInput={(params) => (
+                          <CssTextField
+                            label="Category"
+                            {...params}
+                            error={!!error}
+                            helperText={error?.message}
+                          />
+                        )}
+                      />
+                    )}
+                  />
 
                   <Controller
                     name="keywords"
@@ -300,7 +358,7 @@ const ProductForm = () => {
               </Card>
               <Stack direction="row" spacing={1.5} sx={{ mt: 3 }}>
                 <LoadingButton
-                  style={{ backgroundColor: "#ff06b7" }}
+                  style={{ backgroundColor: '#ff06b7' }}
                   fullWidth
                   type="submit"
                   variant="contained"

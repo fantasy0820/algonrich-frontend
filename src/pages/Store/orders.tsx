@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,25 +9,25 @@ import {
   Badge,
   IconButton,
   Tooltip,
-} from "@mui/material";
-import { Check, SettingsBackupRestore } from "@mui/icons-material";
-import { Modal } from "antd";
-import toastr from "toastr";
-import "toastr/build/toastr.min.css";
-import { shortenIfAddress } from "utils/address";
-import axios from "axios";
-import ReactPaginate from "react-paginate";
-import AdminOnly from "components/AdminOnly";
+} from '@mui/material';
+import { Check, SettingsBackupRestore } from '@mui/icons-material';
+import { Modal } from 'antd';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+import { shortenIfAddress } from 'utils/address';
+import axios from 'axios';
+import ReactPaginate from 'react-paginate';
+import AdminOnly from 'components/AdminOnly';
 
 const TABLE_HEAD = [
-  { id: "id", label: "Order No", alignRight: false },
-  { id: "image", label: "Image", alignRight: false },
-  { id: "name", label: "Product", alignRight: false, width: 200 },
-  { id: "price", label: "Price", alignRight: false },
-  { id: "orderer", label: "Orderer", alignRight: false, width: 240 },
-  { id: "status", label: "Status", alignRight: false },
-  { id: "created", label: "Created", alignRight: false },
-  { id: "action", label: "...", alignRight: false },
+  { id: 'id', label: 'Order No', alignRight: false },
+  { id: 'image', label: 'Image', alignRight: false },
+  { id: 'name', label: 'Product', alignRight: false, width: 200 },
+  { id: 'price', label: 'Price', alignRight: false },
+  { id: 'orderer', label: 'Orderer', alignRight: false, width: 240 },
+  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'created', label: 'Created', alignRight: false },
+  { id: 'action', label: '...', alignRight: false },
 ];
 
 interface OrderProps {
@@ -66,33 +66,33 @@ const Orders = () => {
   const [orderData, setOrderData] = useState([
     {
       id: 1,
-      productId: "1",
+      productId: '1',
       products: [],
       product: {
         id: 1,
-        name: "",
-        images: "",
-        description: "",
-        code: "",
+        name: '',
+        images: '',
+        description: '',
+        code: '',
         inStock: false,
-        keywords: "",
+        keywords: '',
         price: 0,
         salePrice: 0,
-        orderId: "",
+        orderId: '',
         isDelete: false,
-        created_at: "",
-        updated_at: "",
-        deleted_at: "",
+        created_at: '',
+        updated_at: '',
+        deleted_at: '',
       },
       price: 0,
       qty: 0,
-      orderer: "",
-      address: "",
-      status: "",
+      orderer: '',
+      address: '',
+      status: '',
       isDelete: false,
-      created_at: "",
-      updated_at: "",
-      deleted_at: "",
+      created_at: '',
+      updated_at: '',
+      deleted_at: '',
     },
   ]);
   const [isGet, setGetOrders] = useState(false);
@@ -101,13 +101,15 @@ const Orders = () => {
   const getOrderList = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/order`
+        `${process.env.REACT_APP_API_URL}/order`,
       );
       const order = response.data;
 
       const promises = order.map(async (item: any) => {
         const productResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/product/${parseInt(item.productId)}`
+          `${process.env.REACT_APP_API_URL}/product/${parseInt(
+            item.productId,
+          )}`,
         );
         item.product = productResponse.data;
         return item;
@@ -128,59 +130,59 @@ const Orders = () => {
   const formatDate = (dateString: string): string => {
     const date = new Date(Date.parse(dateString));
     const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
       hour12: false,
     };
-    return new Intl.DateTimeFormat("en-GB", options).format(date);
+    return new Intl.DateTimeFormat('en-GB', options).format(date);
   };
 
   const refund = async (id: number) => {
     await axios.patch(`${process.env.REACT_APP_API_URL}/order/refund/${id}`);
 
     setGetOrders(false);
-    toastr.success("Successfully refunded!");
+    toastr.success('Successfully refunded!');
   };
 
   const completeOrder = async (id: number) => {
     await axios.patch(`${process.env.REACT_APP_API_URL}/order/complete/${id}`);
 
     setGetOrders(false);
-    toastr.success("Successfully updated!");
+    toastr.success('Successfully updated!');
   };
 
   const getFirstImage = (images: string) => {
-    if (images !== "") {
+    if (images !== '') {
       const list = JSON.parse(images);
 
       return list[0];
     }
 
-    return "";
+    return '';
   };
 
   const getBadegeContent = (status: string) => {
-    if(status === "pending") {
+    if (status === 'pending') {
       return 'Pending';
-    } else if(status === "refunded") {
+    } else if (status === 'refunded') {
       return 'Refunded';
     } else {
       return 'Completed';
     }
-  }
+  };
 
   const getBadegeColor = (status: string) => {
-    if(status === "pending") {
+    if (status === 'pending') {
       return 'warning';
-    } else if(status === "refunded") {
+    } else if (status === 'refunded') {
       return 'error';
     } else {
       return 'success';
     }
-  }
+  };
 
   useEffect(() => {
     getOrderList();
@@ -200,13 +202,13 @@ const Orders = () => {
                   {TABLE_HEAD.map((column) => (
                     <TableCell
                       key={column.id}
-                      width={column.width ? column.width : ""}
-                      align={column.alignRight ? "right" : "left"}
+                      width={column.width ? column.width : ''}
+                      align={column.alignRight ? 'right' : 'left'}
                       className="border border-[#121a3e]"
                       style={{
-                        background: "#0d102d",
-                        color: "#ddd",
-                        borderBottomColor: "#121a3e",
+                        background: '#0d102d',
+                        color: '#ddd',
+                        borderBottomColor: '#121a3e',
                       }}
                     >
                       {column.label}
@@ -231,9 +233,9 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           {row.id}
@@ -241,9 +243,9 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           <img
@@ -255,9 +257,9 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           {row.product.name}
@@ -265,20 +267,22 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
-                          <p>Price: {row.price}</p>
+                          <p>
+                            Price: {row.usd}$({row.algo}ALGO)
+                          </p>
                           <p>Qty: {row.qty}</p>
                         </TableCell>
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           <p title={row.orderer}>
@@ -289,27 +293,23 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
-                            textAlign: "center",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
+                            textAlign: 'center',
                           }}
                         >
                           <Badge
-                            badgeContent={
-                              getBadegeContent(row.status)
-                            }
-                            color={
-                              getBadegeColor(row.status)
-                            }
+                            badgeContent={getBadegeContent(row.status)}
+                            color={getBadegeColor(row.status)}
                           ></Badge>
                         </TableCell>
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           {row.created_at && formatDate(row.created_at)}
@@ -318,28 +318,28 @@ const Orders = () => {
                         <TableCell
                           className="border border-[#121a3e]"
                           style={{
-                            background: "#0d102d",
-                            color: "#ddd",
-                            borderBottomColor: "#121a3e",
+                            background: '#0d102d',
+                            color: '#ddd',
+                            borderBottomColor: '#121a3e',
                           }}
                         >
                           {row.status === 'pending' && (
                             <Tooltip title="Mark as completed">
                               <IconButton
                                 sx={{
-                                  marginRight: "5px",
-                                  borderRadius: "50%",
-                                  backgroundColor: "#07bc0c",
-                                  color: "#fff",
-                                  "&:hover": {
-                                    backgroundColor: "#278029",
+                                  marginRight: '5px',
+                                  borderRadius: '50%',
+                                  backgroundColor: '#07bc0c',
+                                  color: '#fff',
+                                  '&:hover': {
+                                    backgroundColor: '#278029',
                                   },
                                 }}
                                 onClick={() => {
                                   completeOrder(row.id);
                                 }}
                               >
-                                <Check sx={{ width: "16px", height: "16px" }} />
+                                <Check sx={{ width: '16px', height: '16px' }} />
                               </IconButton>
                             </Tooltip>
                           )}
@@ -348,19 +348,21 @@ const Orders = () => {
                             <Tooltip title="Refund product">
                               <IconButton
                                 sx={{
-                                  marginRight: "5px",
-                                  borderRadius: "50%",
-                                  backgroundColor: "#ff06b7",
-                                  color: "#fff",
-                                  "&:hover": {
-                                    backgroundColor: "#b70082",
+                                  marginRight: '5px',
+                                  borderRadius: '50%',
+                                  backgroundColor: '#ff06b7',
+                                  color: '#fff',
+                                  '&:hover': {
+                                    backgroundColor: '#b70082',
                                   },
                                 }}
                                 onClick={() => {
                                   refund(row.id);
                                 }}
                               >
-                                <SettingsBackupRestore sx={{ width: "16px", height: "16px" }} />
+                                <SettingsBackupRestore
+                                  sx={{ width: '16px', height: '16px' }}
+                                />
                               </IconButton>
                             </Tooltip>
                           )}
@@ -373,15 +375,15 @@ const Orders = () => {
             </Table>
           </TableContainer>
           <ReactPaginate
-            previousLabel={"Prev"}
-            nextLabel={"Next"}
+            previousLabel={'Prev'}
+            nextLabel={'Next'}
             pageCount={Math.ceil(orderData.length / 10)}
             onPageChange={handlePageClick}
-            containerClassName={"pagination"}
-            previousLinkClassName={"pagination__link"}
-            nextLinkClassName={"pagination__link"}
-            disabledClassName={"pagination__link--disabled"}
-            activeClassName={"pagination__link--active"}
+            containerClassName={'pagination'}
+            previousLinkClassName={'pagination__link'}
+            nextLinkClassName={'pagination__link'}
+            disabledClassName={'pagination__link--disabled'}
+            activeClassName={'pagination__link--active'}
           />
         </div>
       </AdminOnly>

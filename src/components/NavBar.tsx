@@ -178,14 +178,20 @@ export default function NavBar({ lngCh }: any) {
             </li>
           </ul>
 
-          <div className="mx-auto my-3 space-y-2 lg:mt-3 md:hidden lg:hidden">
-            <a
-              href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
+          <div className="my-3 mx-auto lg:mt-3 space-y-2 md:hidden lg:hidden">
+            {/* <a
+              href="/purchase-algo"
               target={"_blank"}
               className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
             >
               <Trans i18nKey="btn_buyalgo"> buy algo</Trans>
-            </a>
+            </a> */}
+            <NavLink
+              to="/purchase-algo"
+              className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
+            >
+              <Trans i18nKey="btn_buyalgo">buy algo</Trans>
+            </NavLink>
             <NavLink
               to="/swap"
               className="inline-block w-full px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease"
@@ -195,14 +201,21 @@ export default function NavBar({ lngCh }: any) {
           </div>
         </div>
         {/* </div> */}
-        <div className="hidden space-x-2 lg:flex md:flex">
-          <a
-            href="https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D"
+        <div className="hidden lg:flex md:flex space-x-2">
+        {/* https://pancakeswap.finance/swap?outputCurrency=0x2dA63e26978B27CA854bdFe33F9866AA7c99813D */}
+          {/* <a
+            href="/purchase-algo"
             target={"_blank"}
             className="px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease flex flex-nowrap"
           >
             <Trans i18nKey="btn_buyalgo">buy algo</Trans>
-          </a>
+          </a> */}
+          <NavLink
+            to="/purchase-algo"
+            className="px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease flex items-center"
+          >
+            <Trans i18nKey="btn_buyalgo">buy algo</Trans>
+          </NavLink>
           <NavLink
             to="/swap"
             className="px-4 py-2 text-white rounded-0 border-[2px] rounded-[4px]  border-[#3d4db5] font-bold font-chakrapetch hover:text-[#3d4db5] hover:border-transparent hover:bg-white uppercase transition ease-in-ease flex items-center"

@@ -1,7 +1,7 @@
 const COINSFROM = ["BNB", "ALGO", "BUSD", "Dogecoin", "BTCB", "USDC"];
 
 const COINSTO = ["ALGO"];
-const API_BASIC_URL = process.env.REACT_APP_API_BASIC_URL;
+const API_BASIC_URL = process.env.REACT_APP_API_URL;
 
 const RECIPIENT = "0x2dA63e26978B27CA854bdFe33F9866AA7c99813D";
 
@@ -14,6 +14,13 @@ const CONTRACT_ADDR: TContractAddr = {
   USDC: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
   BTCB: "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
 };
+const Currencies = ["USD", "EUR", "GBP","CAD"];
+const CurrenciesOptions = [
+  {value:"$", label:"USD"},
+  {value:"�", label:"EUR"},
+  {value:"�", label:"GBP"},
+  {value:"C$", label:"CAD"}
+]
 const RoadmapInfo = [
   {
     date: "Q1 2024",
@@ -87,4 +94,6 @@ export {
   API_BASIC_URL,
   RoadmapInfo,
   TeamAvatar,
+  Currencies,
+  CurrenciesOptions
 };

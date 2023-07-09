@@ -1,0 +1,48 @@
+.buyBox {
+  width: 520px;
+  background-color: #0E111B;
+  border: 1px solid #21273a;
+  min-height: 300px;
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  // justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0px 30px;
+}
+
+.buyBoxHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  width: 98%;
+}
+.modalContent {
+  border-top: 1px solid #363e54;
+  /* padding-top: 20px; */
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px
+}
+
+.currencyChoice {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.currencyChoice:hover {
+  cursor: pointer;
+  background-color: #1f2639;
+}
+
+.currencyName {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}

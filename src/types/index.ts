@@ -9,3 +9,9 @@ export interface SwapType {
   amount: number,
   slippage?: string
 }
+
+export interface Product {
+  title: string;
+  amount: number;
+  currency: string;
+}

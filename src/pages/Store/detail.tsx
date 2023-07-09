@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Modal } from "antd";
 import { message } from "antd";
 import axios from "axios";
+import tokenList from "utils/tokenList.json";
 import he from "he";
 import {
   solid,
@@ -55,11 +56,13 @@ const ProductDetail = () => {
   });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [delivery, setDelivery] = useState("");
+  const [username, setUser] = useState("");
   const [qtyVal, setQty] = useState(0);
   const [totalPrice, setTotal] = useState(0);
   const [isGet, setGetProduct] = useState(false);
   const [qtyError, setQtyError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [algoPrice, setAlgoPrice] = useState<any>();
 
   const { address, isConnected } = useAccount();
   const { connect } = useConnect({
@@ -90,21 +93,23 @@ const ProductDetail = () => {
   };
 
   const handleOk = async () => {
-    // const config = await prepareWriteContract({
-    //   address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
-    //   abi: ALGO_ABI,
-    //   functionName: "transfer",
-    //   args: [RECIPIENT, parseEther(totalPrice.toString())],
-    // });
+    const config = await prepareWriteContract({
+      address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
+      abi: ALGO_ABI,
+      functionName: "transfer",
+      args: [RECIPIENT, parseEther(totalPrice.toString())],
+    });
 
-    // await writeContract(config);
+    await writeContract(config);
 
     const response = await axios.post(
       `${process.env.REACT_APP_API_URL}/order`,
       {
         productId: productData.id,
-        price: productData.price,
+        usd: productData.price,
+        algo: algoPrice * 1,
         qty: qtyVal,
+        name: username,
         orderer: address,
         address: delivery,
       }
@@ -129,7 +134,7 @@ const ProductDetail = () => {
       } else {
         setQtyError(false);
         setQty(parseInt(qty.value));
-        setTotal(qtyVal * productData.price);
+        setTotal(qtyVal * algoPrice);
       }
 
       if (type === "buy") {
@@ -158,13 +163,43 @@ const ProductDetail = () => {
     return list[0];
   };
 
-  const getDeliveryAddress = async (e: any) => {
+  const getDeliveryAddress = (e: any) => {
+    e.preventDefault();
+
     setDelivery(e.target.value);
   };
+
+  const getUserName = (e: any) => {
+    e.preventDefault();
+
+    setUser(e.target.value);
+  }
+
+  const getAlgoPrice = async (usdPrice: any) => {
+    const url = `https://deep-index.moralis.io/api/v2/erc20/${tokenList[0].address}/price?chain=bsc&exchange=pancakeswap-v2`;
+    const response = await axios.get(url, {
+      headers: {
+        accept: "application/json",
+        "X-API-Key": process.env.REACT_APP_MORALIS_KEY,
+      },
+    });
+
+    return (usdPrice / response.data.usdPrice).toFixed(2);
+  }
 
   useEffect(() => {
     getProduct();
   }, [isGet]);
+
+  useEffect(() => {
+    async function fetchAlgoPrice() {
+      const price = await getAlgoPrice(productData.price);
+
+      setAlgoPrice(price);
+    }
+
+    fetchAlgoPrice();
+  }, [productData]);
 
   useEffect(() => {
     const handleSwitchNetwork = async () => {
@@ -277,7 +312,7 @@ const ProductDetail = () => {
                 </p>
               </section>
             </section>
-            <section className="flex flex-col justify-evenly h-[4rem] mb-[1rem] border-b-[1px] border-b-[#c3c3c3]">
+            <section className="flex flex-col justify-evenly h-[7rem] mb-[1rem] border-b-[1px] border-b-[#c3c3c3]">
               <p className="text-[28px] font-semibold">
                 <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] font-normal pr-[2px]">
                   $
@@ -285,6 +320,12 @@ const ProductDetail = () => {
                 {getBigPrice(productData.price)}
                 <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] pl-[2px] font-normal">
                   {getSmallPrice(productData.price)}
+                </span>
+              </p>
+              <p className="text-[28px] font-semibold">
+                {algoPrice}
+                <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] font-normal pl-[2px]">
+                  ALGO
                 </span>
               </p>
               <p className="text-[#ccc] text-[0.8rem] pb-[0.5rem]">
@@ -301,7 +342,7 @@ const ProductDetail = () => {
               ></div>
             </section>
           </section>
-          <section className="w-[18rem] h-[21rem] border border-[#c3c3c3] rounded-[0.5rem] p-[1.2rem] mr-[1rem] bg-[#131740] text-left">
+          <section className="w-[18rem] h-[23rem] border border-[#c3c3c3] rounded-[0.5rem] p-[1.2rem] mr-[1rem] bg-[#131740] text-left">
             <p className="text-[28px] font-semibold">
               <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] font-normal pr-[2px]">
                 $
@@ -309,6 +350,12 @@ const ProductDetail = () => {
               {getBigPrice(productData.price)}
               <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] pl-[2px] font-normal">
                 {getSmallPrice(productData.price)}
+              </span>
+            </p>
+            <p className="text-[28px] font-semibold">
+              {algoPrice}
+              <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] font-normal pl-[2px]">
+                ALGO
               </span>
             </p>
             <p className="text-[#ccc] text-[0.8rem] mt-[1rem]">
@@ -376,24 +423,48 @@ const ProductDetail = () => {
                   {getSmallPrice(productData.price)}
                 </span>
               </p>
+              <p className="text-[28px] text-white font-semibold p-[0.7rem 0]">
+                {algoPrice}
+                <span className="relative sm:text-sm text-[9px] sm:top-[-0.5rem] top-[-0.2rem] font-normal pl-[2px]">
+                  ALGO
+                </span>
+              </p>
               <label className="text-white">Qty:</label>
               <span className="relative top-[1px] text-white text-[18px] ml-[0.5rem]">
                 {qtyVal}
               </span>
               <br />
+
               <label className="text-white" htmlFor="inputField">
-                Delivery Address
+                Recepient Name
               </label>
               <input
                 className="text-black w-[15rem] h-[2rem] p-[0.3rem] ml-[0.5rem] rounded-[0.2rem 0 0 0.2rem] outline-none border border-[#c3c3c3]"
                 type="text"
                 id="inputField"
                 name="inputField"
-                //   maxLength="120"
-                placeholder="Delivery Address"
+                placeholder="Username"
                 required
-                onChange={getDeliveryAddress}
+                onChange={getUserName}
               />
+              <br />
+
+              <div className="mt-[5px]">
+                <label className="text-white" htmlFor="inputField">
+                  Delivery Address
+                </label>
+                <input
+                  className="text-black w-[15rem] h-[2rem] p-[0.3rem] ml-[0.5rem] rounded-[0.2rem 0 0 0.2rem] outline-none border border-[#c3c3c3]"
+                  type="text"
+                  id="inputField"
+                  name="inputField"
+                  //   maxLength="120"
+                  placeholder="Delivery Address"
+                  required
+                  onChange={getDeliveryAddress}
+                />
+              </div>
+              
 
               <br />
               <div className="text-white text-[20px] border-t-[1px] border-t-white mt-[2rem] pt-[1rem]">

@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
-// form
 import { useFormContext, Controller } from 'react-hook-form';
-// @mui
-import { TextField } from '@mui/material';
+import { Select, MenuItem } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-
-const CssTextField = styled(TextField)({
+const CssSelect = styled(Select)({
   '& .MuiInputLabel-formControl': {
     color: 'white',
   },
@@ -16,7 +12,6 @@ const CssTextField = styled(TextField)({
   },
   '& .MuiInput-underline:after': {
     borderBottomColor: 'white',
-    color: 'white',
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -25,19 +20,14 @@ const CssTextField = styled(TextField)({
     },
     '&:hover fieldset': {
       borderColor: 'white',
-      color: 'white',
     },
     '&.Mui-focused fieldset': {
       borderColor: 'white',
-      color: 'white',
-    },
-    '& .MuiOutlinedInput-input': {
-      color: 'white',
     },
   },
 });
 
-export default function RHFTextField({ name, ...other }: any) {
+export default function RHFSelect({ name, options, ...other }: any) {
   const { control } = useFormContext();
 
   return (
@@ -45,13 +35,19 @@ export default function RHFTextField({ name, ...other }: any) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <CssTextField
+        <CssSelect
           {...field}
           fullWidth
           error={!!error}
           helperText={error?.message}
           {...other}
-        />
+        >
+          {options.map((option: any) => (
+            <MenuItem key={option.id} value={option.id}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </CssSelect>
       )}
     />
   );
