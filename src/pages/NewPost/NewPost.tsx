@@ -1,19 +1,21 @@
-import * as Yup from "yup";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSnackbar } from "notistack";
-import { useForm, Controller, FormProvider } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { styled } from "@mui/material/styles";
-import "react-toastify/dist/ReactToastify.min.css";
-import "./NewPost.scss";
-import { InboxOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
-import { message, Upload } from "antd";
-import { LoadingButton } from "@mui/lab";
-import ReactQuill from "react-quill";
-import axios from "axios";
-import "react-quill/dist/quill.snow.css";
+import * as Yup from 'yup';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { styled } from '@mui/material/styles';
+import 'react-toastify/dist/ReactToastify.min.css';
+import './NewPost.scss';
+import { InboxOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { Upload } from 'antd';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+import { LoadingButton } from '@mui/lab';
+import ReactQuill from 'react-quill';
+import axios from 'axios';
+import 'react-quill/dist/quill.snow.css';
 
 // import MUIRichTextEditor from "mui-rte";
 
@@ -25,93 +27,93 @@ import {
   Button,
   TextField,
   Autocomplete,
-} from "@mui/material";
-import RHFTextField from "components/RHFTextField";
-import RHFSwitch from "components/RHFSwitch";
+} from '@mui/material';
+import RHFTextField from 'components/RHFTextField';
+import RHFSwitch from 'components/RHFSwitch';
 
 const CssTextField = styled(TextField)({
-  "& .MuiInputLabel-formControl": {
-    color: "white",
+  '& .MuiInputLabel-formControl': {
+    color: 'white',
   },
-  "& label.Mui-focused": {
-    color: "white",
+  '& label.Mui-focused': {
+    color: 'white',
   },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-    color: "white",
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'white',
+    color: 'white',
   },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "gray",
-      color: "white",
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'gray',
+      color: 'white',
     },
-    "&:hover fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&:hover fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&.Mui-focused fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
+    '& .MuiOutlinedInput-input': {
+      color: 'white',
     },
   },
 });
 
 const CssMyEditor = styled(ReactQuill)({
-  "& .ql-snow": {
-    color: "white",
+  '& .ql-snow': {
+    color: 'white',
   },
 });
 
 const NewBlogSchema = Yup.object().shape({
-  title: Yup.string().required("Title is required"),
+  title: Yup.string().required('Title is required'),
   // description: Yup.string().required('Description is required'),
   // content: Yup.string().required('Content is required'),
   // cover: Yup.mixed().required('Cover is required'),
 });
 
 const defaultValues = {
-  title: "",
+  title: '',
   // description: '',
-  content: "",
+  content: '',
   cover: null,
-  tags: ["Blockchain"],
+  tags: ['Blockchain'],
   publish: true,
   comments: true,
-  metaTitle: "",
-  metaDescription: "",
-  metaKeywords: ["Blockchain"],
+  metaTitle: '',
+  metaDescription: '',
+  metaKeywords: ['Blockchain'],
 };
 
 const modules = {
   toolbar: [
     [{ header: [1, 2, 3, 4, 5, false] }],
-    ["bold", "italic", "underline", "strike", "blockquote"],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [
-      { list: "ordered" },
-      { list: "bullet" },
-      { indent: "-1" },
-      { indent: "+1" },
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
     ],
-    ["link", "image"],
-    ["clean"],
+    ['link', 'image'],
+    ['clean'],
   ],
 };
 
 const formats = [
-  "header",
-  "bold",
-  "italic",
-  "underline",
-  "strike",
-  "blockquote",
-  "list",
-  "bullet",
-  "indent",
-  "link",
-  "image",
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
 ];
 
 const { Dragger } = Upload;
@@ -122,8 +124,8 @@ interface TagType {
 }
 
 const ContactForm = () => {
-  const [quilValue, setQuilValue] = useState("");
-  const [cover, setCover] = useState("");
+  const [quilValue, setQuilValue] = useState('');
+  const [cover, setCover] = useState('');
   const [open, setOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [tagsOption, setTagsOption] = useState<Array<TagType>>([]);
@@ -159,16 +161,16 @@ const ContactForm = () => {
           bannerImg: cover,
           content: quilValue,
           userId: 2,
-        }
+        },
       );
 
       if (response.data.id > 0) {
-        message.success("Blog is successfully posted!");
+        toastr.success('Blog is successfully posted!');
       }
 
       reset();
-      setQuilValue("");
-      setCover("");
+      setQuilValue('');
+      setCover('');
     } catch (error) {
       console.error(error);
     }
@@ -177,7 +179,7 @@ const ContactForm = () => {
   const getTagsList = async () => {
     const response = await axios.get(`${process.env.REACT_APP_API_URL}/tag`, {
       headers: {
-        accept: "application/json",
+        accept: 'application/json',
       },
     });
 
@@ -186,31 +188,31 @@ const ContactForm = () => {
   };
 
   const props: UploadProps = {
-    name: "file",
+    name: 'file',
     multiple: true,
-    action: process.env.REACT_APP_API_URL + "/file-service/upload",
+    action: process.env.REACT_APP_API_URL + '/file-service/upload',
     onChange(info) {
       const { status } = info.file;
-      if (status !== "uploading") {
+      if (status !== 'uploading') {
         console.log(info.file, info.fileList);
       }
-      if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
+      if (status === 'done') {
+        toastr.success(`${info.file.name} file uploaded successfully.`);
         setCover(info.file.response.imageUrl);
-      } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+      } else if (status === 'error') {
+        toastr.error(`${info.file.name} file upload failed.`);
       }
     },
     onDrop(e) {
-      console.log("Dropped files", e.dataTransfer.files);
+      console.log('Dropped files', e.dataTransfer.files);
     },
   };
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("useremail") !== "admin@algonrich.com") {
-      navigate("/");
+    if (localStorage.getItem('useremail') !== 'admin@algonrich.com') {
+      navigate('/');
     }
 
     getTagsList();
@@ -273,14 +275,14 @@ const ContactForm = () => {
                         mb: 1,
                         mx: 0,
                         width: 1,
-                        justifyContent: "space-between",
+                        justifyContent: 'space-between',
                       }}
                     />
                     <RHFSwitch
                       name="comments"
                       label="Enable comments"
                       labelPlacement="start"
-                      sx={{ mx: 0, width: 1, justifyContent: "space-between" }}
+                      sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
                     />
                   </div>
 
@@ -357,7 +359,7 @@ const ContactForm = () => {
                   Preview
                 </Button>
                 <LoadingButton
-                  style={{ backgroundColor: "#ff06b7" }}
+                  style={{ backgroundColor: '#ff06b7' }}
                   fullWidth
                   type="submit"
                   variant="contained"

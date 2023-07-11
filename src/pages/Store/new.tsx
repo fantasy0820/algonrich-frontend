@@ -9,7 +9,9 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import './NewProduct.scss';
 import { InboxOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
-import { message, Upload } from 'antd';
+import { Upload } from 'antd';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
 import { LoadingButton } from '@mui/lab';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
@@ -174,7 +176,7 @@ const ProductForm = () => {
       );
 
       if (response.data.id > 0) {
-        message.success('Product is successfully registered!');
+        toastr.success('Product is successfully registered!');
       }
 
       reset();
@@ -195,10 +197,10 @@ const ProductForm = () => {
       if (status !== 'uploading') {
       }
       if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        toastr.success(`${info.file.name} file uploaded successfully.`);
         setImages((prevImages) => [...prevImages, info.file.response.imageUrl]);
       } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
+        toastr.error(`${info.file.name} file upload failed.`);
       }
     },
     onDrop(e) {

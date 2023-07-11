@@ -1,24 +1,25 @@
-import { useEffect } from "react";
-import * as Yup from "yup";
-import { useForm, Controller, FormProvider } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { styled } from "@mui/material/styles";
-import "react-toastify/dist/ReactToastify.min.css";
-import { message } from "antd";
-import { LoadingButton } from "@mui/lab";
-import axios from "axios";
+import { useEffect } from 'react';
+import * as Yup from 'yup';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { styled } from '@mui/material/styles';
+import 'react-toastify/dist/ReactToastify.min.css';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+import { LoadingButton } from '@mui/lab';
+import axios from 'axios';
 
-import { useConnect, useDisconnect, useNetwork, useAccount } from "wagmi";
+import { useConnect, useDisconnect, useNetwork, useAccount } from 'wagmi';
 import {
   switchNetwork,
   prepareWriteContract,
   writeContract,
-} from "@wagmi/core";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { parseEther } from "ethers/lib/utils.js";
-import { shortenIfAddress } from "utils/address";
-import { CONTRACT_ADDR, RECIPIENT } from "const/Consts";
-import { ALGO_ABI } from "abi/AlgonrichABI";
+} from '@wagmi/core';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { parseEther } from 'ethers/lib/utils.js';
+import { shortenIfAddress } from 'utils/address';
+import { CONTRACT_ADDR, RECIPIENT } from 'const/Consts';
+import { ALGO_ABI } from 'abi/AlgonrichABI';
 
 import {
   Grid,
@@ -27,62 +28,62 @@ import {
   Stack,
   TextField,
   Autocomplete,
-} from "@mui/material";
-import RHFTextField from "components/RHFTextField";
+} from '@mui/material';
+import RHFTextField from 'components/RHFTextField';
 
 const CssTextField = styled(TextField)({
-  "& .MuiInputLabel-formControl": {
-    color: "white",
+  '& .MuiInputLabel-formControl': {
+    color: 'white',
   },
-  "& label.Mui-focused": {
-    color: "white",
+  '& label.Mui-focused': {
+    color: 'white',
   },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-    color: "white",
+  '& .MuiInput-underline:after': {
+    borderBottomColor: 'white',
+    color: 'white',
   },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "gray",
-      color: "white",
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'gray',
+      color: 'white',
     },
-    "&:hover fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&:hover fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "&.Mui-focused fieldset": {
-      borderColor: "white",
-      color: "white",
+    '&.Mui-focused fieldset': {
+      borderColor: 'white',
+      color: 'white',
     },
-    "& .MuiOutlinedInput-input": {
-      color: "white",
+    '& .MuiOutlinedInput-input': {
+      color: 'white',
     },
   },
 });
 
 const NewServiceSchema = Yup.object().shape({
-  companies: Yup.string().required("Phone Company is required"),
-  phoneNumber: Yup.string().required("Phone Number is required"),
-  pin: Yup.string().required("PIN is required"),
-  name: Yup.string().required("User Name is required"),
-  email: Yup.string().required("User Email is required"),
-  amount: Yup.string().required("Amount is required"),
+  companies: Yup.string().required('Phone Company is required'),
+  phoneNumber: Yup.string().required('Phone Number is required'),
+  pin: Yup.string().required('PIN is required'),
+  name: Yup.string().required('User Name is required'),
+  email: Yup.string().required('User Email is required'),
+  amount: Yup.string().required('Amount is required'),
 });
 
 const defaultValues = {
-  companies: ["MetroPCS"],
-  phoneNumber: "",
-  pin: "",
-  name: "",
-  email: "",
-  amount: "",
+  companies: ['MetroPCS'],
+  phoneNumber: '',
+  pin: '',
+  name: '',
+  email: '',
+  amount: '',
 };
 
 const PhoneService = () => {
   const servicesOption = [
-    { id: 1, name: "MetroPCS" },
-    { id: 2, name: "Boost Mobile" },
-    { id: 3, name: "T-Mobile" },
+    { id: 1, name: 'MetroPCS' },
+    { id: 2, name: 'Boost Mobile' },
+    { id: 3, name: 'T-Mobile' },
   ];
 
   const { address, isConnected } = useAccount();
@@ -107,9 +108,9 @@ const PhoneService = () => {
   const onSubmit = async (data: any) => {
     try {
       const config = await prepareWriteContract({
-        address: CONTRACT_ADDR["ALGO"] as `0x${string}`,
+        address: CONTRACT_ADDR['ALGO'] as `0x${string}`,
         abi: ALGO_ABI,
-        functionName: "transfer",
+        functionName: 'transfer',
         args: [RECIPIENT, parseEther(data.amount)],
       });
 
@@ -125,17 +126,17 @@ const PhoneService = () => {
           username: data.name,
           email: data.email,
           amount: data.amount * 1,
-        }
+        },
       );
 
       if (response.data.id > 0) {
-        message.success("Phone Billing Service is successfully requested!");
+        toastr.success('Phone Billing Service is successfully requested!');
       }
 
       reset();
     } catch (error: any) {
       error.response.data.message.forEach((error: any) => {
-        message.error(error);
+        toastr.error(error);
       });
     }
   };
@@ -154,7 +155,7 @@ const PhoneService = () => {
 
   return (
     <div className="new-post justify-between mx-auto w-[95%] lg:w-[90%] py-[150px]">
-      <div className="flex justify-end items-right gap-5 mr-8">
+      <div className="flex justify-end gap-5 mr-8 items-right">
         <div className="items-center rounded-[5px] flex font-[500] text-white px-[15px] py-[10px] transition duration-300 hover:bg-[#222a3a] hover:cursor-pointer">
           <img
             src="../assets/images/bsc.svg"
@@ -193,7 +194,7 @@ const PhoneService = () => {
               xs={12}
               md={12}
               className="title"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: 'center' }}
             >
               Request a new service
             </Grid>
@@ -231,11 +232,11 @@ const PhoneService = () => {
                     )}
                   />
 
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
                     <RHFTextField name="phoneNumber" label="Phone Number" />
                     <RHFTextField name="pin" label="PIN" />
                   </Stack>
-                  <Stack direction={{ xs: "column", sm: "row" }} spacing={3}>
+                  <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3}>
                     <RHFTextField name="name" label="User Name" />
                     <RHFTextField name="email" label="User Email" />
                   </Stack>
@@ -249,13 +250,13 @@ const PhoneService = () => {
                       size="large"
                       loading={isSubmitting}
                       sx={{
-                        border: "2px solid #3d4db5",
-                        background: "transparent",
-                        fontWeight: "700",
-                        "&:hover": {
-                          borderColor: "#fff",
-                          background: "#fff",
-                          color: "#3d4db5",
+                        border: '2px solid #3d4db5',
+                        background: 'transparent',
+                        fontWeight: '700',
+                        '&:hover': {
+                          borderColor: '#fff',
+                          background: '#fff',
+                          color: '#3d4db5',
                         },
                       }}
                     >

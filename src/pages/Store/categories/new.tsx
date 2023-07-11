@@ -6,7 +6,8 @@ import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-toastify/dist/ReactToastify.min.css';
 import '../NewProduct.scss';
-import { message, Upload } from 'antd';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
 import ReactPaginate from 'react-paginate';
@@ -86,7 +87,7 @@ const CategoryForm = () => {
         );
 
         if (response.data.id > 0) {
-          message.success('Category is successfully Updated!');
+          toastr.success('Category is successfully Updated!');
         }
 
         reset();
@@ -101,7 +102,7 @@ const CategoryForm = () => {
         );
 
         if (response.data.id > 0) {
-          message.success('Category is successfully registered!');
+          toastr.success('Category is successfully registered!');
         }
 
         reset();
@@ -147,7 +148,7 @@ const CategoryForm = () => {
       `${process.env.REACT_APP_API_URL}/category/${id}`,
     );
 
-    message.success(response.data);
+    toastr.success(response.data);
     setGetList(false);
   };
 
@@ -156,7 +157,7 @@ const CategoryForm = () => {
       `${process.env.REACT_APP_API_URL}/category/activate/${id}`,
     );
 
-    message.success(response.data);
+    toastr.success(response.data);
     setGetList(false);
   };
 
