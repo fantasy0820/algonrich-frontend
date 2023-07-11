@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Trans } from 'react-i18next';
 import './Store.scss';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
@@ -125,7 +126,7 @@ export default function Store() {
                 onClick={handleDrawerToggle}
               >
                 {' '}
-                All
+                <Trans i18nKey="cat_all">All</Trans>
                 <FontAwesomeIcon icon={faList} className="mx-2" />
               </p>
               <Link
@@ -133,32 +134,32 @@ export default function Store() {
                 className="border-2 border-transparent px-2 py-1 text-base text-white hover:border-white hover:rounded-sm list-category hover:mt-[1px] hover:pt-[3px]"
               >
                 {' '}
-                Today's Deals
+                <Trans i18nKey="cat_today">Today's Deals</Trans>
               </Link>
               <a
                 href=""
                 className="border-2 border-transparent px-2 py-1 text-base text-white hover:border-white hover:rounded-sm list-category hover:mt-[1px] hover:pt-[3px]"
               >
                 {' '}
-                Customer Service
+                <Trans i18nKey="cat_customer">Customer Service</Trans>
               </a>
               <a
                 href=""
                 className="border-2 border-transparent px-2 py-1 text-base text-white hover:border-white hover:rounded-sm list-category hover:mt-[1px] hover:pt-[3px]"
               >
-                Registry
+                <Trans i18nKey="cat_registry">Registry</Trans>
               </a>
               <a
                 href=""
                 className="border-2 border-transparent px-2 py-1 text-base text-white hover:border-white hover:rounded-sm list-category hover:mt-[1px] hover:pt-[3px]"
               >
-                Gift Cards
+                <Trans i18nKey="cat_gift">Gift Cards</Trans>
               </a>
               <a
                 href=""
                 className="border-2 border-transparent px-2 py-1 text-base text-white hover:border-white hover:rounded-sm list-category hover:mt-[1px] hover:pt-[3px]"
               >
-                Sell
+                <Trans i18nKey="cat_sell">Sell</Trans>
               </a>
             </div>
           </div>
@@ -168,19 +169,19 @@ export default function Store() {
                 to="/store/orders"
                 className="py-1 px-2 mr-2 text-base text-white border-2 rounded-sm border-transparent box-border hover:border-white hover:mt-[1px] hover:pt-[3px]"
               >
-                Order List
+                <Trans i18nKey="order_list">Order List</Trans>
               </Link>
               <Link
                 to="/store/new"
                 className="py-1 px-2 mr-2 text-base text-white border-2 rounded-sm border-transparent box-border hover:border-white hover:mt-[1px] hover:pt-[3px]"
               >
-                + Add New
+                <Trans i18nKey="add_new_product">+ Add New</Trans>
               </Link>
               <Link
                 to="/store/new_category"
                 className="py-1 px-2 mr-8 text-base text-white border-2 rounded-sm border-transparent box-border hover:border-white hover:mt-[1px] hover:pt-[3px]"
               >
-                + Add Category
+                <Trans i18nKey="add_new_category">+ Add Category</Trans>
               </Link>
             </div>
           </AdminOnly>

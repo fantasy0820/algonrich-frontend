@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Trans } from 'react-i18next';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -181,7 +182,7 @@ const CategoryForm = () => {
     <div className="new-post justify-between mx-auto w-[95%] lg:w-[90%] py-[150px]">
       <Grid container spacing={3}>
         <Grid item xs={12} md={12} className="title">
-          Create New Category
+          <Trans i18nKey="cat_title">Create New Category</Trans>
         </Grid>
       </Grid>
       <Grid container spacing={3}>
@@ -203,7 +204,11 @@ const CategoryForm = () => {
                   size="large"
                   loading={isSubmitting}
                 >
-                  {catId > 0 ? 'Update' : 'Create'}
+                  {catId > 0 ? (
+                    <Trans i18nKey="btn_update">Update</Trans>
+                  ) : (
+                    <Trans i18nKey="btn_create">Create</Trans>
+                  )}
                 </LoadingButton>
               </Stack>
             </form>

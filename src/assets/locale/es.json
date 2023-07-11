@@ -56,6 +56,18 @@
     "bepart": "Ser parte del equipo",
     "bepart_text": "Algonrich ofrecerá muchas funciones con un equipo descentralizado que dejará atrás a nuestros competidores. Algonrich tiene un gran potencial para convertirse en líder del mercado. Hemos demostrado consistentemente el poder de la innovación. Un mega potencial en el mercado de derivados está a la espera de ser descubierto y estamos listos para aprovechar nuestro éxito con nuestros planes. Únase al equipo de futuros ganadores.",
     "dontmiss": "No se lo pierda, únase ahora para acceso anticipado",
-    "allrightreserve": "ALGONRICH 2022- Todos los derechos reservados"
+    "allrightreserve": "ALGONRICH 2022- Todos los derechos reservados",
+    "cat_all": "Todo",
+    "cat_today": "Especiales de hoy",
+    "cat_customer": "Servicio al Cliente",
+    "cat_registry": "Registro",
+    "cat_gift": "Tarjetas de regalo",
+    "cat_sell": "Vender",
+    "order_list": "Lista de orden",
+    "add_new_product": "+ Agregar nuevo",
+    "add_new_category": "+ Añadir categoría",
+    "cat_title": "Crear nueva categoría",
+    "btn_create": "Crear",
+    "btn_update": "Actualizar"
   }
 }
