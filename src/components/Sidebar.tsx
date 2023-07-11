@@ -11,7 +11,7 @@ export const Sidebar = ({ onCategoryChange }: SidebarProps) => {
 
   const getCategories = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/category`,
+      `${process.env.REACT_APP_API_URL}/category/get_active_categories`,
     );
 
     setCategories(response.data);

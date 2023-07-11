@@ -208,7 +208,7 @@ const ProductForm = () => {
 
   const getCategories = async () => {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/category`,
+      `${process.env.REACT_APP_API_URL}/category/get_active_categories`,
     );
 
     setCategory(response.data);

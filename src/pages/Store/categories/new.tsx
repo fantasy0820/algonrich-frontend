@@ -77,7 +77,7 @@ const CategoryForm = () => {
     try {
       if (catId > 0) {
         const response = await axios.patch(
-          `${process.env.REACT_APP_API_URL}/category/update/${catId}`,
+          `${process.env.REACT_APP_API_URL}/category/${catId}`,
           {
             name: data.name,
             code: data.code,
@@ -85,7 +85,7 @@ const CategoryForm = () => {
         );
 
         if (response.data.id > 0) {
-          message.success('Category is successfully registered!');
+          message.success('Category is successfully Updated!');
         }
 
         reset();
@@ -132,8 +132,8 @@ const CategoryForm = () => {
       );
 
       if (response.data.id) {
-        setCatName(response.data.name);
-        setCode(response.data.code);
+        methods.setValue('name', response.data.name);
+        methods.setValue('code', response.data.code);
         setCatId(id);
       }
     } catch (error) {
@@ -203,7 +203,7 @@ const CategoryForm = () => {
                   size="large"
                   loading={isSubmitting}
                 >
-                  Create Category
+                  {catId > 0 ? 'Update' : 'Create'}
                 </LoadingButton>
               </Stack>
             </form>
